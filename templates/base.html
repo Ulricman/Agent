@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnowTax 智知税典</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>KnowTax 智知税典</h2>
+        <ul>
+            <li><a href="/data/policies">税务政策库</a></li>
+            <li><a href="/data/qa">问答库</a></li>
+            <li><a href="/data/terms">词库</a></li>
+            {% if session['role'] == 'admin' %}
+            <li><a href="/admin/permissions">权限管理</a></li>
+            <li><a href="/admin/user-status">用户状态</a></li>
+            {% elif session['role'] == 'manager' %}
+            <li><a href="/manager/user-status">用户状态</a></li>
+            <li><a href="/manager/tasks">待审批任务</a></li>
+            <li><a href="/manager/hotproblems">高频问题</a></li>
+            <li><a href="/manager/update">政策更新</a></li>
+            {% elif session['role'] == 'service' %}
+            <li><a href="/service/search">搜索功能</a></li>
+            <li><a href="/service/user-status">用户状态</a></li>
+            {% endif %}
+            <li><a href="/auth/logout">退出登录</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>
