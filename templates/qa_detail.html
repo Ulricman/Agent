@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="qa-detail-container">
+    <h1>问答详情</h1>
+    <div class="qa-detail-card">
+        <div class="qa-header">
+            <span class="qa-id">编号: {{ qa[0] }}</span>
+            <span class="qa-category">分类: {{ qa[3] }}</span>
+        </div>
+        <div class="qa-question">
+            <h2>问题</h2>
+            <div class="question-content">
+                {{ qa[1] }}
+            </div>
+        </div>
+        <div class="qa-answer">
+            <h2>回答</h2>
+            <div class="answer-content">
+                {{ qa[2] }}
+            </div>
+        </div>
+        <div class="qa-actions">
+            <a href="/data/qa/edit/{{ qa[0] }}" class="btn btn-primary">编辑</a>
+            <a href="/data/qa" class="btn btn-secondary">返回列表</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

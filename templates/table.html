@@ -1,23 +1,46 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>{{ title }}</h2>
-<table border="1">
-    <thead>
-        <tr>
-            {% for header in headers %}
-            <th>{{ header }}</th>
+<div class="table-container">
+    <h1>{{ title }}</h1>
+    <table class="data-table">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for i in range(row|length) %}
+                <td>
+                    {% if title == "问答库" and (i == 1 or i == 2) %}
+                    <a href="/data/qa/detail/{{ row[0] }}" class="content-link">
+                        {{ row[i]|truncate(30) }}
+                    </a>
+                    {% else %}
+                    {{ row[i] }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <td>
+                    {% if title == "问答库" %}
+                    <a href="/data/qa/detail/{{ row[0] }}" class="btn btn-sm btn-info">查看</a>
+                    <a href="/data/qa/edit/{{ row[0] }}" class="btn btn-sm btn-primary">编辑</a>
+                    {% elif title == "税务政策库" %}
+                    <a href="/data/policies/detail/{{ row[0] }}" class="btn btn-sm btn-info">查看</a>
+                    {% elif title == "词库" %}
+                    <a href="/data/terms/detail/{{ row[0] }}" class="btn btn-sm btn-info">查看</a>
+                    {% endif %}
+                </td>
+            </tr>
             {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in data %}
-        <tr>
-            {% for cell in row %}
-            <td>{{ cell }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="{{ add_new_url }}">添加新条目</a>
+        </tbody>
+    </table>
+    <div class="action-buttons">
+        <a href="{{ add_new_url }}" class="btn btn-success">添加新条目</a>
+    </div>
+</div>
 {% endblock %}

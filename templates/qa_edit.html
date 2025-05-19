@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="edit-container">
+    <h1>编辑问答</h1>
+    <form method="POST" action="/data/qa/update/{{ qa[0] }}">
+        <div class="form-group">
+            <label for="question">问题内容:</label>
+            <textarea id="question" name="question" rows="4" required>{{ qa[1] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="answer">回答内容:</label>
+            <textarea id="answer" name="answer" rows="8" required>{{ qa[2] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="category">分类:</label>
+            <input type="text" id="category" name="category" value="{{ qa[3] }}" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">保存修改</button>
+            <a href="/data/qa/detail/{{ qa[0] }}" class="btn btn-secondary">取消</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
