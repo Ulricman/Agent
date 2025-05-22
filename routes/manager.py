@@ -13,8 +13,8 @@ def tasks():
     return render_template("tasks.html", title="待审批任务")
 
 
-@manager_bp.route("/hotproblems")
-def hotProblems():
+@manager_bp.route("/hot-problems")
+def hot_problems():
     return render_template("hotProblems.html", title="高频问题")
 
 

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KnowTax 智知税典</title>
+	<link rel="stylesheet" href="../static/icon/iconfont.css">
+	<script src="../static/js/jquery.min.js"></script>
+	<script src="../static/js/echarts.min.js"></script>
+</head>
+<body>
+<div class="container-header">
+    <ul class="nowTime">
+        <li></li>
+        <li></li>
+    </ul>
+    <div class="menu-btn">
+        <i class="icon iconfont icon-menu"></i>
+    </div>
+    <div class="location">
+        <i class="icon iconfont icon-buoumaotubiao23"></i>
+        <span class="areaName"></span>
+    </div>
+    <h3>KnowTax 智知税典</h3>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h4>KnowTax 智知税典</h4>
+        <div class="close-btn">
+            <i class="icon iconfont icon-close"></i>
+        </div>
+    </div>
+    <ul class="sidebar-menu">
+		{% if session.role == 'admin' %}
+            <!-- 管理员菜单 -->
+            <div class="menu-section">
+                <h2>管理员功能</h2>
+                <div class="menu-grid">
+                    <a href="{{ url_for('admin.permissions') }}" class="menu-item">
+                        <i class="fas fa-user-shield"></i>
+                        <span>权限管理</span>
+                    </a>
+                    <a href="{{ url_for('admin.user_status') }}" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>用户状态</span>
+                    </a>
+                </div>
+            </div>
+		{% elif session.role == 'manager' %}
+            <!-- 经理菜单 -->
+            <div class="menu-section">
+                <h2>经理功能</h2>
+                <div class="menu-grid">
+                    <a href="{{ url_for('manager.user_status') }}" class="menu-item">
+                        <i class="fas fa-user-check"></i>
+                        <span>用户状态</span>
+                    </a>
+                    <a href="{{ url_for('manager.tasks') }}" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>待审批任务</span>
+                    </a>
+                    <a href="{{ url_for('manager.hot_problems') }}" class="menu-item">
+                        <i class="fas fa-fire"></i>
+                        <span>高频问题</span>
+                    </a>
+                    <a href="{{ url_for('manager.update') }}" class="menu-item">
+                        <i class="fas fa-sync"></i>
+                        <span>政策更新</span>
+                    </a>
+                </div>
+            </div>
+		{% elif session.role == 'service' %}
+            <!-- 客服菜单 -->
+            <div class="menu-section">
+                <h2>客服功能</h2>
+                <div class="menu-grid">
+                    <a href="{{ url_for('service.search') }}" class="menu-item">
+						<i class="fas fa-search"></i>
+                        <span>搜索功能</span>
+                    </a>
+                    <a href="{{ url_for('service.user_status') }}" class="menu-item">
+                        <i class="fas fa-user"></i>
+                        <span>用户状态</span>
+                    </a>
+                </div>
+            </div>
+		{% endif %}
+		<div class="menu-section">
+            <h2>通用功能</h2>
+            <div class="menu-grid">
+                <a href="{{ url_for('data.policies') }}" class="menu-item">
+                    <i class="fas fa-book"></i>
+                    <span>税务政策库</span>
+                </a>
+                <a href="{{ url_for('data.qa') }}" class="menu-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>问答库</span>
+                </a>
+                <a href="{{ url_for('data.terms') }}" class="menu-item">
+                    <i class="fas fa-glossary"></i>
+                    <span>词库</span>
+                </a>
+            </div>
+        </div>
+    </ul>
+</div>
+
+<div class="container-content">
+    <div class="top">
+		<div class="count-base" >
+			<div class="com-count-title">资源总量构成</div>
+			<div class="com-screen-content">
+				
+				<div id="main1" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-resource q1">
+			<div class="com-count-title">资源总量统计</div>
+			<div class="com-screen-content2">
+				<ul class="use-data">
+					<li>
+						<p class="data-count">15681 </p>
+						<span class="data-name">数据总量</span>
+					</li>
+					<li>
+						<p class="data-count"> 1731</p>
+						<span class="data-name">更新量</span>
+					</li>
+					<!-- <li>
+						<p class="data-count">11753</p>
+						<span class="data-name">共享次数</span>
+					</li> -->
+				</ul>
+				<div class="com-screen-content">
+				 <div id="main2" style="margin-top:10px;width:100%;height:240px;"></div>
+				</div>
+				<span class="left-top"></span>
+				<span class="right-top"></span>
+				<span class="left-bottom"></span>
+				<span class="right-bottom"></span>
+			</div>
+		</div>
+		<div class="count-resource q2">
+			<div class="com-count-title">基础库统计</div>
+			
+				
+			<div class="com-screen-content">
+				<ul class="data-label">
+					<li class="active" data-type="1">政策库</li>
+					<li data-type="2">知识库</li>
+					<li data-type="3">词库</li>               
+				</ul>
+				<ul class="use-data">
+
+				</ul>
+			 <div id="main3" style="margin-top:10px;width:100%;height:240px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+    </div>
+
+	<div class="mid">
+		<div class="count-share w1" >
+			<div class="com-count-title">高频查询次数</div>
+			<div class="com-screen-content">
+				    <div class="topRec_List">
+						<dl>
+							<dd>查询名称</dd>
+							<dd>查询次数</dd>
+							<dd>最近一次查询时间</dd>
+						</dl>
+						<div class="maquee">
+							<ul>
+								<li>
+									<div>个人所得税比率</div>
+									<div>500</div>
+									<div>08:20:26 </div>
+								</li> 
+								<li>
+								
+									<div>个人所得税起征点</div>
+									<div>300</div>
+									<div>08:20:36 </div>
+								</li> 
+								<li>
+									
+									<div>反向开票</div>
+									<div>210</div>
+									<div>08:20:46 </div>
+								</li> 
+								<li>		
+									<div>累进税率</div>
+									<div>198</div>
+									<div>08:20:56</div>
+								</li> 
+								<li>							
+									<div>退税</div>
+									<div>12459</div>
+									<div>10:03:21</div>
+								</li> 
+								<!-- <li>									
+									<div>交通运输局主要职责</div>
+									<div>完全免费分享</div>
+									<div>08:21:07</div>
+								</li>  -->
+							</ul>
+						</div>
+					</div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-share w2" >
+			<div class="com-count-title">每月查询次数</div>
+			<div class="com-screen-content">
+			 <div id="main5" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+	</div>
+	
+	<!-- <div class="bottom">
+		<div class="count-topic e1" >
+			<div class="com-count-title">主题库统计</div>
+			<div class="com-screen-content">
+			<div id="main6" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-topic e2" >
+			<div class="com-count-title">主题库共享次数</div>
+			<div class="com-screen-content">
+			 <div id="main7" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div> -->
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<script type="text/javascript"> 
+//根据不同的分辨率调用不同的css和js
+	if(window.screen.width>=1600){
+		document.write("<link href='../static/css/test-1920.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"../static/js/test-1920.js\"><\/script>");
+	}
+	else if(window.screen.width<1600&&window.screen.width>=1280){
+		document.write("<link href='../static/css/test-1280.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"../static/js/test-1280.js\"><\/script>");
+	}else{
+	document.write("<link href='../static/css/test-1024.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"../static/js/test-1024.js\"><\/script>");
+	}
+</script>
+<!--大屏-->
+<script type="text/javascript"> 
+	  function autoScroll(obj){  
+			$(obj).find("ul").animate({  
+				marginTop : "-39px"  
+			},500,function(){  
+				$(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
+			})  
+		}  
+		$(function(){  
+			setInterval('autoScroll(".maquee")',2000);
+		}) 
+</script> 
+</body>
+</html>
