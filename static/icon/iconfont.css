@@ -1,0 +1,51 @@
+@font-face {
+    font-family: "iconfont";
+    src: url('iconfont.eot');
+    src: url('iconfont.eot?#iefix') format('embedded-opentype'),
+         url('iconfont.woff2') format('woff2'),
+         url('iconfont.woff') format('woff'),
+         url('iconfont.ttf') format('truetype');
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-buoumaotubiao23:before { content: "\e615"; }
+
+.icon-menu:before {
+    content: "\e6b8";
+}
+
+.icon-close:before {
+    content: "\e6b9";
+}
+
+.icon-policy:before {
+    content: "\e6ba";
+}
+
+.icon-qa:before {
+    content: "\e6bb";
+}
+
+.icon-dict:before {
+    content: "\e6bc";
+}
+
+.icon-permission:before {
+    content: "\e6bd";
+}
+
+.icon-user:before {
+    content: "\e6be";
+}
+
+.icon-logout:before {
+    content: "\e6bf";
+}
+
