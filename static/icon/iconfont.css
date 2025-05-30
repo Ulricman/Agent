@@ -18,11 +18,11 @@
 .icon-buoumaotubiao23:before { content: "\e615"; }
 
 .icon-menu:before {
-    content: "\e6b8";
+    content: "\2630";
 }
 
 .icon-close:before {
-    content: "\e6b9";
+    content: "\2715";
 }
 
 .icon-policy:before {
@@ -46,6 +46,6 @@
 }
 
 .icon-logout:before {
-    content: "\e6bf";
+    content: "\23FB";
 }
 

@@ -4,13 +4,12 @@ from routes.admin import admin_bp
 from routes.manager import manager_bp
 from routes.service import service_bp
 from routes.data import data_bp
-from models.user import db, User
+from routes.notification import notification_bp
+from models import db
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
-
-# 配置数据库
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tax.db'
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # 初始化数据库
@@ -22,7 +21,11 @@ app.register_blueprint(admin_bp, url_prefix="/admin")
 app.register_blueprint(manager_bp, url_prefix="/manager")
 app.register_blueprint(service_bp, url_prefix="/service")
 app.register_blueprint(data_bp, url_prefix="/data")
+app.register_blueprint(notification_bp, url_prefix="/notification")
 
+# 创建数据库表
+with app.app_context():
+    db.create_all()
 
 @app.route("/")
 def index():
@@ -35,6 +38,4 @@ def home():
     return render_template('home.html')
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()  # 创建数据库表
     app.run(debug=True, port=12345)

@@ -302,59 +302,47 @@ a{text-decoration:none;}
 
 /* 菜单按钮样式 */
 .menu-btn {
-    position: absolute;
-    left: 17px;
-    top: 41px;
     cursor: pointer;
-    color: #fff;
-    font-size: 20px;
-    height: 20px;
-    line-height: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.menu-btn:hover {
-    color: #1bb4f9;
+    color: white;
+    font-size: 1.5em;
+    padding: 10px;
 }
 
 /* 侧边栏样式 */
 .sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
     width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    position: fixed;
     height: 100vh;
-    background: rgba(13, 35, 67, 0.95);
+    left: -250px; /* 初始状态隐藏 */
+    top: 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     z-index: 1000;
-    transition: all 0.3s ease;
-    border-right: 1px solid rgba(255,255,255,0.1);
+    transition: left 0.3s ease;
 }
 
 .sidebar.active {
-    left: 0;
+    left: 0; /* 显示状态 */
 }
 
 .sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
 }
 
 .sidebar-header h4 {
-    color: #fff;
+    color: white;
     margin: 0;
+    font-size: 1.2em;
 }
 
 .close-btn {
+    color: white;
     cursor: pointer;
-    color: #fff;
-}
-
-.close-btn:hover {
-    color: #1bb4f9;
 }
 
 .sidebar-menu {
@@ -364,22 +352,31 @@ a{text-decoration:none;}
 }
 
 .sidebar-menu li {
-    padding: 15px 20px;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    margin: 10px 0;
+}
+
+.sidebar-menu a {
+    color: #ecf0f1 !important;
+    text-decoration: none;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-.sidebar-menu li i {
+.sidebar-menu a:hover {
+    background-color: #34495e;
+}
+
+.sidebar-menu i {
     margin-right: 10px;
-    font-size: 18px;
+    width: 20px;
+    text-align: center;
 }
 
-.sidebar-menu li:hover {
-    background: rgba(27, 180, 249, 0.1);
-    color: #1bb4f9;
+.sidebar-menu span {
+    color: #ecf0f1;
 }
 
 /* 添加遮罩层 */

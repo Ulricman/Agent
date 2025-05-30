@@ -10,6 +10,10 @@
 </head>
 
 <body>
+    <div class="notification-button">
+        <i class="fas fa-bell"></i>
+    </div>
+
     <div class="sidebar">
         <h2>KnowTax 智知税典</h2>
         <ul>
@@ -36,8 +40,78 @@
         </div>
     </div>
     <div class="content">
+        <div class="header">
+            <div class="notification-btn">
+                <i class="fas fa-bell"></i>
+            </div>
+        </div>
         {% block content %}{% endblock %}
     </div>
+
+    <div class="notification-panel">
+        <div class="notification-header">
+            <h4>通知中心</h4>
+            <button class="close-notification">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="notification-section">
+            <h4>提醒</h4>
+            <div class="scrollable-content">
+                <div class="notification-item">
+                    <div class="notification-time">
+                        <span class="date">2024-03-20</span>
+                        <span class="time">10:30</span>
+                    </div>
+                    <div class="notification-content" data-full-content="这是一条测试通知，用于验证显示效果。">
+                        这是一条测试通知，用于验证显示效果。
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-time">
+                        <span class="date">2024-03-20</span>
+                        <span class="time">09:15</span>
+                    </div>
+                    <div class="notification-content" data-full-content="系统将于今晚进行例行维护，请提前做好准备。">
+                        系统将于今晚进行例行维护，请提前做好准备。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="memo-section">
+            <div class="memo-header">
+                <h4>备忘录</h4>
+                <button class="add-memo"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="memo-list">
+                <!-- 备忘录列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="memo-editor">
+        <div class="memo-editor-header">
+            <div class="memo-title-section">
+                <h3>新建备忘录</h3>
+                <button class="save-btn"><i class="fas fa-save"></i> 保存</button>
+            </div>
+            <button class="close-editor"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="memo-editor-content">
+            <div class="memo-input-group">
+                <input type="text" id="memo-title" placeholder="请输入备忘录标题..." class="memo-title-input">
+                <textarea id="memo-content" placeholder="请输入备忘内容..."></textarea>
+            </div>
+        </div>
+        <div class="memo-editor-footer">
+            <button class="cancel-btn">取消</button>
+        </div>
+    </div>
+
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/notification.js"></script>
 </body>
 
 <style>
