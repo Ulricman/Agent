@@ -482,51 +482,55 @@ function init_myChart2() {
 	myChart2.setOption(option);
 }
 function init_myChart1(){
-	option = {
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
+	var option1 = {
+		// title: {
+		// 	text: '',
+		// 	textStyle: {
+		// 		color: '#fff'
+		// 	}
+		// },
+		tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c} ({d}%)'
+		},
+		legend: {
+			orient: 'vertical',
+			right: 10,
+			top: 'center',
+			textStyle: {
+				color: '#fff'
 			},
-			color:['#8fc31f','#f35833','#00ccff','#ffcc00','#f5e965','#a74faf','#ff9668'],
-		   
-			series : [
-				{
-					name: '资源总量构成',
-					type: 'pie',
-					radius : '40%',
-					center: ['50%', '50%'],
-					data:[
-						{value:435, name:'公安局'},
-						{value:679, name:'民政局'},
-						{value:848, name:'气象局'},
-						{value:348, name:'统计局'},
-						{value:679, name:'交通局'},
-						{value:848, name:'人社局'},
-						{value:1348, name:'其他'}
-					],
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					},
-					itemStyle: {
-						normal: {
-							label:{ 
-								show: true, 
-	//	                            position:'inside',
-								formatter: '{b} : {c} ({d}%)' ,
-								fontSize : 14,    //文字的字体大小
-							}
-						},
-						labelLine :{show:true}
+			data: ['政策库', '知识库', '词库']
+		},
+		series: [
+			{
+				name: '资源总量',
+				type: 'pie',
+				radius: ['50%', '70%'],
+				avoidLabelOverlap: false,
+				label: {
+					show: false,
+					position: 'center'
+				},
+				emphasis: {
+					label: {
+						show: true,
+						fontSize: '20',
+						fontWeight: 'bold'
 					}
-				}
-			]
-		};
-// 使用刚指定的配置项和数据显示图表。
-	myChart1.setOption(option);
+				},
+				labelLine: {
+					show: false
+				},
+				data: [
+					{value: 1048, name: '政策库'},
+					{value: 735, name: '知识库'},
+					{value: 580, name: '词库'}
+				]
+			}
+		]
+	};
+	myChart1.setOption(option1);
 }
 
 function init_myChart5(){
@@ -806,13 +810,11 @@ $(document).ready(function() {
     // 菜单按钮点击事件
     $('.menu-btn').click(function() {
         $('.sidebar').addClass('active');
-        $('.overlay').addClass('active');
     });
     
     // 关闭按钮点击事件
     $('.close-btn').click(function() {
         $('.sidebar').removeClass('active');
-        $('.overlay').removeClass('active');
     });
     
     // 遮罩层点击事件

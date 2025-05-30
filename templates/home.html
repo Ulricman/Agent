@@ -3,9 +3,160 @@
 <head>
     <meta charset="utf-8">
     <title>KnowTax 智知税典</title>
-	<link rel="stylesheet" href="../static/icon/iconfont.css">
-	<script src="../static/js/jquery.min.js"></script>
-	<script src="../static/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="../static/icon/iconfont.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/echarts.min.js"></script>
+    <script src="../static/js/notification.js"></script>
+    <style>
+        /* 通知按钮样式 */
+        .notification-btn {
+            position: absolute;
+            right: 5rem;
+            top: 100%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1000;
+        }
+
+        .notification-btn i {
+            font-size: 1.5rem;
+            color: #fff;
+            transition: color 0.3s;
+        }
+
+        .notification-btn:hover i {
+            color: #4CAF50;
+        }
+
+        /* 通知面板样式 */
+        .notification-panel {
+            position: fixed;
+            top: 3.5rem;
+            right: 1rem;
+            width: 20rem;
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.1);
+            z-index: 1001;
+            display: none;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 0.0625rem solid #eee;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .close-btn i {
+            font-size: 1rem;
+            color: #999;
+        }
+
+        .scrollable-content {
+            max-height: calc(100vh - 8rem);
+            overflow-y: auto;
+        }
+
+        .reminder-section,
+        .memo-section {
+            padding: 1rem;
+            border-bottom: 0.0625rem solid #eee;
+        }
+
+        .reminder-section h4,
+        .memo-section h4 {
+            margin: 0 0 0.625rem 0;
+            color: #333;
+            font-size: 0.875rem;
+        }
+
+        .notification-item,
+        .memo-item {
+            padding: 0.625rem;
+            border-bottom: 0.0625rem solid #eee;
+        }
+
+        .notification-time,
+        .memo-time {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-content,
+        .memo-content {
+            font-size: 0.875rem;
+            color: #333;
+        }
+
+        .memo-editor {
+            margin-top: 1rem;
+            padding: 0.625rem;
+            background: #f9f9f9;
+            border-radius: 0.25rem;
+        }
+
+        .memo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.625rem;
+        }
+
+        .save-memo {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .memo-title,
+        .memo-text {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 0.0625rem solid #ddd;
+            border-radius: 0.25rem;
+        }
+
+        .memo-text {
+            height: 5rem;
+            resize: none;
+        }
+
+        /* 确保菜单按钮样式正确 */
+        .menu-btn {
+            position: absolute;
+            left:0.8rem;
+            top: 100%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1000;
+        }
+
+        .menu-btn i {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 <div class="container-header">
@@ -15,6 +166,9 @@
     </ul>
     <div class="menu-btn" onclick="toggleSidebar()">
         <i class="icon iconfont icon-menu"></i>
+    </div>
+    <div class="notification-btn">
+        <i class="fas fa-bell"></i>
     </div>
     <div class="location">
         <i class="icon iconfont icon-buoumaotubiao23"></i>
@@ -100,6 +254,10 @@
                     <i class="fas fa-glossary"></i>
                     <span>词库</span>
                 </a>
+				<li><a href="{{ url_for('auth.logout') }}">
+					<i class="icon iconfont icon-logout"></i>
+					<span>退出登录</span>
+				</a></li>
             </div>
         </div>
         
@@ -274,6 +432,151 @@
 	<div class="clearfix"></div>
 </div>
 
+<!-- 通知面板 -->
+<div class="notification-panel">
+    <div class="notification-header">
+        <h3>通知中心</h3>
+        <div class="close-btn">
+            <i class="icon iconfont icon-close"></i>
+        </div>
+    </div>
+    <div class="scrollable-content">
+        <!-- 提醒模块 -->
+        <div class="reminder-section">
+            <h4>提醒</h4>
+            <div class="notification-list">
+                <div class="notification-item">
+                    <div class="notification-time">
+                        <span class="date">2024-03-20</span>
+                        <span class="time">10:30</span>
+                    </div>
+                    <div class="notification-content">这是一条测试通知内容...</div>
+                </div>
+            </div>
+        </div>
+        <!-- 备忘录模块 -->
+        <!-- <div class="memo-section">
+            <h4>备忘录</h4>
+            <div class="memo-list">
+                <div class="memo-item">
+                    <div class="memo-content">会议安排：下午3点产品讨论会</div>
+                    <div class="memo-time">2024-03-20 14:30</div>
+                </div>
+            </div>
+            <div class="memo-editor">
+                <div class="memo-header">
+                    <span>新建备忘录</span>
+                    <button class="save-memo">保存</button>
+                </div>
+                <input type="text" class="memo-title" placeholder="请输入标题">
+                <textarea class="memo-text" placeholder="请输入内容"></textarea>
+            </div>
+        </div> -->
+        <div class="memo-section">
+            <h4>备忘录</h4>
+            <div class="memo-list">
+                <!-- 备忘录列表将通过JavaScript动态加载 -->
+            </div>
+            <div class="memo-editor">
+                <div class="memo-header">
+                    <span>新建备忘录</span>
+                    <button class="save-memo">保存</button>
+                </div>
+                <input type="text" class="memo-title" placeholder="请输入标题">
+                <textarea class="memo-text" placeholder="请输入内容"></textarea>
+            </div>
+        </div>
+        
+        <script>
+        $(document).ready(function() {
+            // 加载备忘录
+            function loadMemos() {
+                $.get('/get_memos', function(response) {
+                    if (response.success) {
+                        $('.memo-list').empty();
+                        response.memos.forEach(function(memo) {
+                            var memoHtml = `
+                                <div class="memo-item" data-id="${memo.id}">
+                                    <div class="memo-content">
+                                        <strong>${memo.title}</strong>
+                                        <p>${memo.content}</p>
+                                    </div>
+                                    <div class="memo-time">${memo.created_at}</div>
+                                    <button class="delete-memo" data-id="${memo.id}">删除</button>
+                                </div>
+                            `;
+                            $('.memo-list').append(memoHtml);
+                        });
+                    }
+                });
+            }
+        
+            // 初始加载备忘录
+            loadMemos();
+        
+            // 保存备忘录
+            $('.save-memo').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var title = $('.memo-title').val();
+                var content = $('.memo-text').val();
+                
+                if (title && content) {
+                    $.ajax({
+                        url: '/save_memo',
+                        method: 'POST',
+                        data: {
+                            title: title,
+                            content: content
+                        },
+                        success: function(response) {
+                            if(response.success) {
+                                loadMemos();  // 重新加载所有备忘录
+                                $('.memo-title').val('');
+                                $('.memo-text').val('');
+                            } else {
+                                alert(response.message || '保存失败');
+                            }
+                        },
+                        error: function() {
+                            alert('保存失败，请重试');
+                        }
+                    });
+                } else {
+                    alert('请填写标题和内容');
+                }
+            });
+        
+            // 删除备忘录
+            $(document).on('click', '.delete-memo', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var memoId = $(this).data('id');
+                if (confirm('确定要删除这条备忘录吗？')) {
+                    $.ajax({
+                        url: '/delete_memo/' + memoId,
+                        method: 'POST',
+                        success: function(response) {
+                            if(response.success) {
+                                loadMemos();  // 重新加载所有备忘录
+                            } else {
+                                alert(response.message || '删除失败');
+                            }
+                        },
+                        error: function() {
+                            alert('删除失败，请重试');
+                        }
+                    });
+                }
+            });
+        });
+        </script>
+    </div>
+
+</div>
+
 <script type="text/javascript"> 
 //根据不同的分辨率调用不同的css和js
 	if(window.screen.width>=1600){
@@ -339,5 +642,62 @@
 			createOverlay();
 		});
 </script> 
+<script>
+$(document).ready(function() {
+    // 侧边栏按钮点击事件
+    $('.menu-btn').click(function() {
+        $('.sidebar').addClass('active');
+    });
+
+    // 侧边栏关闭按钮点击事件
+    $('.sidebar .close-btn').click(function() {
+        $('.sidebar').removeClass('active');
+    });
+
+    // 通知按钮点击事件
+    $('.notification-btn').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.notification-panel').slideDown(200);
+    });
+
+    // 通知面板关闭按钮点击事件
+    $('.notification-panel .close-btn').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.notification-panel').slideUp(200);
+    });
+
+    // 点击页面其他区域关闭通知面板
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.notification-panel, .notification-btn').length) {
+            $('.notification-panel').slideUp(200);
+        }
+    });
+
+    // 防止点击通知面板内部时关闭面板
+    $('.notification-panel').on('click', function(e) {
+        e.stopPropagation();
+    });
+
+    // 保存备忘录
+    $('.save-memo').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var title = $('.memo-title').val();
+        var content = $('.memo-text').val();
+        if (title && content) {
+            // 这里添加保存备忘录的逻辑
+            alert('备忘录已保存');
+            $('.memo-title').val('');
+            $('.memo-text').val('');
+        } else {
+            alert('请填写标题和内容');
+        }
+        return false;  // 阻止事件继续传播
+    });
+});
+</script>
 </body>
 </html>
