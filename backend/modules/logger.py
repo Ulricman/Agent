@@ -71,8 +71,14 @@ class StructuredLogger:
             if os.path.exists(self.json_log_file):
                 try:
                     with open(self.json_log_file, 'r', encoding='utf-8') as f:
-                        logs = json.load(f)
-                except json.JSONDecodeError:
+                        data = json.load(f)
+                        # Ensure data is a list
+                        if isinstance(data, list):
+                            logs = data
+                        else:
+                            # If it's not a list, start fresh
+                            logs = []
+                except (json.JSONDecodeError, TypeError):
                     logs = []
             
             # Add new log entry
@@ -97,7 +103,12 @@ class StructuredLogger:
                 return []
             
             with open(self.json_log_file, 'r', encoding='utf-8') as f:
-                logs = json.load(f)
+                data = json.load(f)
+                # Ensure data is a list
+                if isinstance(data, list):
+                    logs = data
+                else:
+                    return []
             
             return logs[-count:] if len(logs) > count else logs
             
@@ -112,7 +123,12 @@ class StructuredLogger:
                 return []
             
             with open(self.json_log_file, 'r', encoding='utf-8') as f:
-                logs = json.load(f)
+                data = json.load(f)
+                # Ensure data is a list
+                if isinstance(data, list):
+                    logs = data
+                else:
+                    return []
             
             return [log for log in logs if log.get('level') == level.upper()]
             

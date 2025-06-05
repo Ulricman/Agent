@@ -1,4 +1,15 @@
 {% extends "base.html" %}
+
+{% block head %}
+<style>
+    .table-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 80px 20px 20px; /* 右侧留出空间给切换按钮 */
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="table-container">
     <h1>{{ title }}</h1>

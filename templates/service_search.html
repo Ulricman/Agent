@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    .search-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 80px 20px 20px; /* 右侧留出空间给切换按钮 */
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .search-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .tab-button {
+        background: none;
+        border: none;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #6c757d;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .tab-button.active {
+        color: #28a745;
+        border-bottom-color: #28a745;
+        font-weight: bold;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .search-box {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        border: 1px solid #e9ecef;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+    }
+    
+    .search-input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    .search-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        background: linear-gradient(135deg, #20c997, #28a745);
+    }
+    
+    .search-btn:active {
+        transform: translateY(0);
+    }
+    
+    .results-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        padding: 30px;
+        border: 1px solid #e9ecef;
+        animation: fadeInUp 0.6s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .result-item {
+        padding: 25px;
+        border-bottom: 1px solid #f1f3f4;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .result-item:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .result-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .result-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #28a745;
+        margin-bottom: 12px;
+        transition: color 0.3s ease;
+    }
+    
+    .result-item:hover .result-title {
+        color: #20c997;
+    }
+    
+    .result-content {
+        color: #495057;
+        line-height: 1.7;
+        margin-bottom: 15px;
+        font-size: 15px;
+    }
+    
+    .qa-conversation {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+    
+    .qa-question {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .qa-answer {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .quick-questions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .quick-question-btn {
+        background: white;
+        border: 2px solid #dee2e6;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: left;
+    }
+    
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .toast.show {
+        transform: translateX(0);
+    }
+    
+    .toast.error {
+        background: #dc3545;
+    }
+    
+    .toast.info {
+        background: #17a2b8;
+    }
+    
+    .search-help {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+    
+    .search-options {
+        margin-top: 10px;
+        display: flex;
+        gap: 20px;
+    }
+    
+    .search-options label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #495057;
+    }
+    
+    .similarity-score {
+        background: #28a745;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    
+    .similarity-high {
+        background: #28a745;
+    }
+    
+    .similarity-medium {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .similarity-low {
+        background: #dc3545;
+    }
+    
+    .fuzzy-result-item {
+        border-left: 4px solid #007bff;
+        margin-bottom: 15px;
+    }
+    
+    .fuzzy-result-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <h2>知识搜索与问答服务</h2>
+    
+    <div class="search-tabs">
+        <button class="tab-button active" onclick="switchTab('knowledge')">知识库搜索</button>
+        <button class="tab-button" onclick="switchTab('qa')">模糊搜索问答</button>
+        <button class="tab-button" onclick="switchTab('browse')">浏览问答库</button>
+    </div>
+    
+    <div id="knowledgeTab" class="tab-content active">
+        <div class="search-box">
+            <h4>知识库搜索</h4>
+            <div class="search-input-group">
+                <input type="text" class="search-input" id="knowledgeSearchInput" placeholder="输入关键词搜索税务知识...">
+                <button class="search-btn" onclick="searchKnowledge()">搜索</button>
+            </div>
+        </div>
+        <div class="results-container" id="knowledgeResults">
+            <div>请输入关键词开始搜索</div>
+        </div>
+    </div>
+    
+    <div id="qaTab" class="tab-content">
+        <div class="search-box">
+            <h4>模糊搜索问答</h4>
+            <p class="search-help">输入关键词，系统将智能匹配相关问题和答案，支持不同表述方式的模糊搜索</p>
+            <div class="quick-questions">
+                <button class="quick-question-btn" onclick="fuzzySearchQuestion('增值税')">增值税相关</button>
+                <button class="quick-question-btn" onclick="fuzzySearchQuestion('企业所得税')">企业所得税</button>
+                <button class="quick-question-btn" onclick="fuzzySearchQuestion('发票')">发票相关</button>
+                <button class="quick-question-btn" onclick="fuzzySearchQuestion('申报')">税务申报</button>
+                <button class="quick-question-btn" onclick="fuzzySearchQuestion('税率')">税率查询</button>
+            </div>
+            <div class="search-input-group">
+                <input type="text" class="search-input" id="qaInput" placeholder="输入关键词模糊搜索相关问题...">
+                <button class="search-btn" onclick="fuzzySearchQuestion()">模糊搜索</button>
+            </div>
+            <div class="search-options">
+                <label><input type="checkbox" id="sortBySimilarity" checked> 按相似度排序</label>
+                <label><input type="checkbox" id="showSimilarityScore" checked> 显示匹配度</label>
+            </div>
+        </div>
+        <div class="results-container" id="qaResults">
+            <div>请输入关键词开始模糊搜索</div>
+        </div>
+    </div>
+    
+    <div id="browseTab" class="tab-content">
+        <div class="search-box">
+            <h4>问答库浏览</h4>
+            <button class="search-btn" onclick="loadQADatabase()">刷新列表</button>
+        </div>
+        <div class="results-container" id="qaDatabase">
+            <div>正在加载问答库...</div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="text-center mt-4" style="padding: 20px; background: #f8f9fa; border-radius: 10px; margin-top: 30px;">
+    <h5>需要更多功能？</h5>
+    <p class="text-muted">访问完整的后端管理系统，体验更强大的税务知识管理工具</p>
+    <div class="btn-group" role="group">
+        <a href="{{ url_for('integration.dashboard') }}" class="btn btn-primary">
+            <i class="fas fa-tachometer-alt"></i> 集成管理界面
+        </a>
+        <a href="http://localhost:8000" target="_blank" class="btn btn-secondary">
+            <i class="fas fa-external-link-alt"></i> 直接访问后端
+        </a>
+        <a href="http://localhost:8000/docs" target="_blank" class="btn btn-outline-primary">
+            <i class="fas fa-book-open"></i> API文档
+        </a>
+    </div>
+</div>
+
+<script>
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + type + ' show';
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName + 'Tab').classList.add('active');
+    
+    if (tabName === 'browse') {
+        loadQADatabase();
+    }
+}
+
+function searchKnowledge() {
+    const query = document.getElementById('knowledgeSearchInput').value.trim();
+    if (!query) {
+        showToast('请输入搜索关键词', 'error');
+        return;
+    }
+    
+    const resultsDiv = document.getElementById('knowledgeResults');
+    resultsDiv.innerHTML = '<div>正在搜索...</div>';
+    
+    fetch('/service/api/search-knowledge?q=' + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                let html = '<h5>搜索结果 (' + data.data.length + ' 条)</h5>';
+                data.data.forEach(item => {
+                    html += '<div class="result-item">';
+                    html += '<div class="result-title">' + item.title + '</div>';
+                    html += '<div class="result-content">' + item.content + '</div>';
+                    html += '</div>';
+                });
+                resultsDiv.innerHTML = html;
+                showToast('找到 ' + data.data.length + ' 条相关知识');
+            } else {
+                resultsDiv.innerHTML = '<div>未找到相关知识</div>';
+                showToast('未找到相关知识', 'info');
+            }
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = '<div>搜索服务暂时不可用</div>';
+            showToast('搜索服务暂时不可用', 'error');
+        });
+}
+
+function fuzzySearchQuestion(keyword) {
+    if (keyword) {
+        document.getElementById('qaInput').value = keyword;
+    }
+    
+    const query = document.getElementById('qaInput').value.trim();
+    if (!query) {
+        showToast('请输入搜索关键词', 'error');
+        return;
+    }
+    
+    const resultsDiv = document.getElementById('qaResults');
+    resultsDiv.innerHTML = '<div>正在搜索匹配的问题...</div>';
+    
+    // 调用后端API进行模糊搜索
+    fetch('/service/api/fuzzy-search-qa?q=' + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                displayFuzzySearchResults(data.data, query);
+                showToast('找到 ' + data.data.length + ' 个相关问题');
+            } else {
+                resultsDiv.innerHTML = '<div>未找到与 "' + query + '" 相关的问题</div>';
+                showToast('未找到相关问题', 'info');
+            }
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = '<div>搜索服务暂时不可用</div>';
+            showToast('搜索服务暂时不可用', 'error');
+        });
+}
+
+function displayFuzzySearchResults(results, query) {
+    const resultsDiv = document.getElementById('qaResults');
+    const sortBySimilarity = document.getElementById('sortBySimilarity').checked;
+    const showSimilarityScore = document.getElementById('showSimilarityScore').checked;
+    
+    // 排序
+    if (sortBySimilarity) {
+        results.sort((a, b) => b.similarity - a.similarity);
+    }
+    
+    let html = '<h5>找到 ' + results.length + ' 个相关问题</h5>';
+    
+    results.forEach((item, index) => {
+        const similarityPercent = Math.round(item.similarity * 100);
+        let scoreClass = 'similarity-high';
+        if (similarityPercent < 70) scoreClass = 'similarity-low';
+        else if (similarityPercent < 85) scoreClass = 'similarity-medium';
+        
+        html += '<div class="result-item fuzzy-result-item">';
+        html += '<div class="result-title">';
+        html += item.question;
+        if (showSimilarityScore) {
+            html += '<span class="similarity-score ' + scoreClass + '">' + similarityPercent + '%</span>';
+        }
+        html += '</div>';
+        html += '<div class="result-content">' + item.answer + '</div>';
+        html += '<div class="fuzzy-result-meta">';
+        html += '<span>分类：' + item.category + '</span>';
+        html += '<span>匹配度：' + (similarityPercent >= 85 ? '高' : similarityPercent >= 70 ? '中' : '低') + '</span>';
+        html += '</div>';
+        html += '</div>';
+    });
+    
+    resultsDiv.innerHTML = html;
+}
+
+function loadQADatabase() {
+    const resultsDiv = document.getElementById('qaDatabase');
+    resultsDiv.innerHTML = '<div>正在加载...</div>';
+    
+    fetch('/service/api/get-qa-list')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                let html = '<h5>问答库 (' + data.data.length + ' 条记录)</h5>';
+                data.data.forEach(qa => {
+                    html += '<div class="qa-conversation">';
+                    html += '<div class="qa-question">' + qa.question + '</div>';
+                    html += '<div class="qa-answer">' + qa.answer + '</div>';
+                    html += '</div>';
+                });
+                resultsDiv.innerHTML = html;
+                showToast('问答库加载完成');
+            } else {
+                resultsDiv.innerHTML = '<div>问答库暂无数据</div>';
+                showToast('问答库暂无数据', 'info');
+            }
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = '<div>加载问答库失败</div>';
+            showToast('加载问答库失败', 'error');
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadQADatabase();
+    
+    // 添加页面动画效果
+    initPageAnimations();
+});
+
+function initPageAnimations() {
+    // 为搜索框添加进入动画
+    const searchBoxes = document.querySelectorAll('.search-box');
+    searchBoxes.forEach((box, index) => {
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(30px)';
+        box.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            box.style.opacity = '1';
+            box.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+    
+    // 为快速问题按钮添加悬停效果
+    const quickButtons = document.querySelectorAll('.quick-question-btn');
+    quickButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+            this.style.transition = 'transform 0.3s ease';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // 为标签按钮添加动画效果
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.3s ease';
+            }
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    // 为输入框添加焦点动画
+    const inputs = document.querySelectorAll('.search-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.3s ease';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+}
+
+// 重写显示结果函数，添加动画效果
+const originalDisplayFuzzySearchResults = displayFuzzySearchResults;
+displayFuzzySearchResults = function(results, query) {
+    originalDisplayFuzzySearchResults(results, query);
+    
+    // 为结果项添加进入动画
+    const resultItems = document.querySelectorAll('.result-item');
+    resultItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-30px)';
+        item.style.transition = 'all 0.4s ease';
+        
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, index * 100);
+    });
+};
+
+// 重写加载问答库函数，添加动画效果
+const originalLoadQADatabase = loadQADatabase;
+loadQADatabase = function() {
+    const resultsDiv = document.getElementById('qaDatabase');
+    resultsDiv.innerHTML = '<div class="loading-animation">正在加载...</div>';
+    
+    // 添加加载动画
+    const loadingDiv = resultsDiv.querySelector('.loading-animation');
+    if (loadingDiv) {
+        loadingDiv.style.textAlign = 'center';
+        loadingDiv.style.padding = '40px';
+        loadingDiv.style.fontSize = '18px';
+        loadingDiv.style.color = '#6c757d';
+    }
+    
+    originalLoadQADatabase();
+};
+</script>
+{% endblock %} 

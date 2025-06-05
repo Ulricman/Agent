@@ -12,8 +12,8 @@
     ],
     "effective_date": "2024-01-01",
     "status": "active",
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "增值税暂行条例实施细则",
     "related_policies": [
       "VAT-2024-001"
@@ -33,8 +33,8 @@
     ],
     "effective_date": "2024-01-01",
     "status": "active",
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "企业所得税法",
     "related_policies": [
       "CIT-2024-002"
@@ -53,12 +53,144 @@
     ],
     "effective_date": "2024-01-01",
     "status": "active",
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "个人所得税法",
     "related_policies": [
       "IIT-2024-003"
     ],
     "priority": "high"
+  },
+  {
+    "id": "kb_auto_2843d336",
+    "title": "消费税政策变更通知（2025年06月）",
+    "content": "根据最新政策变更，消费税相关规定已作出调整。主要变化包括征收标准、计税方法等方面的更新。企业和个人纳税人应及时了解新政策内容，确保合规申报和缴税。\n\n具体变更说明：检测到税务政策变更，需要更新知识库",
+    "category": "消费税",
+    "keywords": [
+      "征收范围",
+      "优惠政策",
+      "减免条件",
+      "消费税"
+    ],
+    "effective_date": "2025-06-05",
+    "status": "active",
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_policies": [
+      "消费税-AUTO-20250605"
+    ],
+    "priority": "medium",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "policy_change",
+      "description": "检测到税务政策变更，需要更新知识库",
+      "priority": "medium",
+      "category": "增值税",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "28dacb014f32bbf22fcfb739dad7dd90",
+    "created_at": "2025-06-05T18:52:54.428322",
+    "updated_at": "2025-06-05T18:52:54.428322"
+  },
+  {
+    "id": "kb_auto_6a3d8611",
+    "title": "增值税政策变更通知（2025年06月）",
+    "content": "根据最新政策变更，增值税相关规定已作出调整。主要变化包括征收标准、计税方法等方面的更新。企业和个人纳税人应及时了解新政策内容，确保合规申报和缴税。\n\n具体变更说明：检测到税务政策变更，需要更新知识库",
+    "category": "增值税",
+    "keywords": [
+      "申报时间",
+      "缴税期限",
+      "办理流程",
+      "增值税"
+    ],
+    "effective_date": "2025-06-05",
+    "status": "active",
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_policies": [
+      "增值税-AUTO-20250605"
+    ],
+    "priority": "medium",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "policy_change",
+      "description": "检测到税务政策变更，需要更新知识库",
+      "priority": "medium",
+      "category": "增值税",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "28dacb014f32bbf22fcfb739dad7dd90",
+    "created_at": "2025-06-05T18:52:54.429324",
+    "updated_at": "2025-06-05T18:52:54.429324"
+  },
+  {
+    "id": "kb_auto_6e740cc7",
+    "title": "小微企业优惠政策发布（2025年06月）",
+    "content": "新的小微企业优惠政策已发布，符合条件的纳税人可享受相应的税收减免。建议企业及时了解优惠条件和申请程序，充分利用政策红利。\n\n具体变更说明：新优惠政策发布，需要添加减免政策内容",
+    "category": "小微企业",
+    "keywords": [
+      "优惠政策",
+      "减免条件",
+      "申请程序",
+      "小微企业"
+    ],
+    "effective_date": "2025-06-05",
+    "status": "active",
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_policies": [
+      "小微企业-AUTO-20250605"
+    ],
+    "priority": "low",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "preferential_policy",
+      "description": "新优惠政策发布，需要添加减免政策内容",
+      "priority": "low",
+      "category": "小微企业",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "4cf85154be5a08bee1d56aa7b7dff810",
+    "created_at": "2025-06-05T18:52:54.430322",
+    "updated_at": "2025-06-05T18:52:54.430322"
+  },
+  {
+    "id": "kb_auto_c4311fa6",
+    "title": "高新技术优惠政策发布（2025年06月）",
+    "content": "新的高新技术优惠政策已发布，符合条件的纳税人可享受相应的税收减免。建议企业及时了解优惠条件和申请程序，充分利用政策红利。\n\n具体变更说明：新优惠政策发布，需要添加减免政策内容",
+    "category": "高新技术",
+    "keywords": [
+      "计算方法",
+      "申报流程",
+      "审核标准",
+      "高新技术"
+    ],
+    "effective_date": "2025-06-05",
+    "status": "active",
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_policies": [
+      "高新技术-AUTO-20250605"
+    ],
+    "priority": "low",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "preferential_policy",
+      "description": "新优惠政策发布，需要添加减免政策内容",
+      "priority": "low",
+      "category": "小微企业",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "4cf85154be5a08bee1d56aa7b7dff810",
+    "created_at": "2025-06-05T18:52:54.431324",
+    "updated_at": "2025-06-05T18:52:54.431324"
   }
 ]

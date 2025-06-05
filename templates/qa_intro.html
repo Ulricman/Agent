@@ -1,0 +1,538 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    .intro-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .intro-header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+    }
+    
+    .intro-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .intro-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin: 0;
+    }
+    
+    .content-sections {
+        display: grid;
+        gap: 30px;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid #007bff;
+    }
+    
+    .section-card h2 {
+        color: #007bff;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .feature-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 3px solid #007bff;
+    }
+    
+    .feature-item h4 {
+        color: #495057;
+        margin-bottom: 10px;
+    }
+    
+    .search-demo {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 10px;
+        padding: 25px;
+        margin: 20px 0;
+    }
+    
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+    
+    .search-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    
+    .qa-example {
+        background: white;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .qa-question {
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+    
+    .qa-answer {
+        color: #495057;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+    
+    .qa-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6c757d;
+        border-top: 1px solid #dee2e6;
+        padding-top: 10px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #007bff;
+        display: block;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+    
+    .highlight-box {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+    }
+    
+    .highlight-box h3 {
+        color: #856404;
+        margin-bottom: 10px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #0056b3;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #545b62;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        color: #007bff;
+        border-color: #007bff;
+    }
+    
+    .btn-outline:hover {
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .search-results {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .fuzzy-examples {
+        background: #e8f5e8;
+        border: 1px solid #c3e6cb;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .fuzzy-example-item {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .similarity-score {
+        background: #28a745;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    /* 响应式布局调整 */
+    .qa-container {
+        transition: all 0.3s ease;
+    }
+    
+    /* Sidebar收缩时的布局适应 */
+    body.sidebar-collapsed .qa-container {
+        margin-left: 20px !important;
+        max-width: calc(100% - 120px) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .qa-container {
+            margin-left: 20px !important;
+            max-width: calc(100% - 40px) !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 qa-container" style="padding: 20px 80px 20px 40px; margin-left: 280px; max-width: calc(100% - 320px);">  <!-- 增加与侧栏的间距 -->
+    <div class="jumbotron bg-primary text-white text-center">
+        <h1><i class="fas fa-question-circle"></i> 问答库</h1>
+        <p class="lead">智能问答系统与模糊搜索功能</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3><i class="fas fa-info-circle text-primary"></i> 功能简介</h3>
+                    <p class="lead">
+                        问答库是 KnowTax 智知税典的核心知识服务组件，集成了智能问答和模糊搜索功能。
+                        系统采用先进的模糊匹配算法，能够理解用户的自然语言提问，并提供相关度最高的答案。
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-brain"></i> 智能问答</h5>
+                            <p>基于自然语言处理技术，理解用户问题意图，提供精准的税务问题解答</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-search"></i> 模糊搜索</h5>
+                            <p>支持关键词模糊匹配，即使表述不准确也能找到相关问答内容</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">3,456</h3>
+                    <p>问答对总数</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-info">25</h3>
+                    <p>分类数量</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">892</h3>
+                    <p>本月查询</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-warning">98%</h3>
+                    <p>匹配准确率</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4><i class="fas fa-search"></i> 模糊搜索演示</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="demoSearchInput" placeholder="请输入您的税务问题..." value="增值税怎么算">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" onclick="performDemoSearch()">
+                            <i class="fas fa-search"></i> 搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="demoResults" style="display: none;">
+                <!-- 搜索结果 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4><i class="fas fa-comments"></i> 问答示例</h4>
+        </div>
+        <div class="card-body">
+            <div class="qa-example mb-3 p-3 border-left border-primary">
+                <h5 class="text-primary">Q: 增值税的计算公式是什么？</h5>
+                <p><strong>A:</strong> 增值税的基本计算公式为：应纳税额 = 销项税额 - 进项税额。其中销项税额 = 销售额 × 适用税率</p>
+                <small class="text-muted">分类：增值税 | 查看：1,256次 | 有用：98%</small>
+            </div>
+            
+            <div class="qa-example mb-3 p-3 border-left border-info">
+                <h5 class="text-primary">Q: 小规模纳税人和一般纳税人有什么区别？</h5>
+                <p><strong>A:</strong> 主要区别包括年销售额标准、税率不同、进项税抵扣规则和发票开具权限等方面</p>
+                <small class="text-muted">分类：纳税人资格 | 查看：2,108次 | 有用：96%</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-warning mt-4">
+        <h5><i class="fas fa-exclamation-triangle"></i> 重要提示</h5>
+        <p>上述问答示例仅为展示格式，具体税务政策请以最新官方文件为准。如需体验完整的智能问答功能和模糊搜索，请访问后端管理系统。</p>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('integration.dashboard') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-tachometer-alt"></i> 集成管理界面
+        </a>
+        <a href="http://localhost:8000/qa" target="_blank" class="btn btn-secondary btn-lg">
+            <i class="fas fa-external-link-alt"></i> 直接访问后端
+        </a>
+        <a href="{{ url_for('service.search') }}" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-comments"></i> 客服问答
+        </a>
+    </div>
+</div>
+
+<script>
+const mockQAData = [
+    {
+        question: "增值税的计算公式是什么？",
+        answer: "增值税应纳税额 = 销项税额 - 进项税额。销项税额 = 销售额 × 适用税率。",
+        category: "增值税",
+        similarity: 95
+    },
+    {
+        question: "如何计算增值税？",
+        answer: "增值税计算：应纳税额 = 当期销项税额 - 当期进项税额",
+        category: "增值税",
+        similarity: 92
+    },
+    {
+        question: "增值税税率有哪些？",
+        answer: "增值税税率分为13%、9%、6%三档，另有3%、1%征收率适用于小规模纳税人。",
+        category: "增值税",
+        similarity: 88
+    }
+];
+
+function performDemoSearch() {
+    const query = document.getElementById('demoSearchInput').value.trim();
+    const resultsDiv = document.getElementById('demoResults');
+    
+    if (!query) {
+        alert('请输入搜索关键词');
+        return;
+    }
+    
+    let html = '<div class="mt-3"><h5>搜索结果 (' + mockQAData.length + ' 条)：</h5>';
+    
+    mockQAData.forEach(item => {
+        html += '<div class="border-left border-primary p-3 mb-2 bg-light">';
+        html += '<h6 class="text-primary">' + item.question + '</h6>';
+        html += '<p>' + item.answer + '</p>';
+        html += '<small class="text-muted">分类: ' + item.category + ' | 相似度: ' + item.similarity + '%</small>';
+        html += '</div>';
+    });
+    
+    html += '</div>';
+    resultsDiv.innerHTML = html;
+    resultsDiv.style.display = 'block';
+}
+
+document.getElementById('demoSearchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performDemoSearch();
+    }
+});
+
+// 添加页面动画效果
+document.addEventListener('DOMContentLoaded', function() {
+    // 为统计数字添加动画效果
+    const statNumbers = document.querySelectorAll('.card h3');
+    statNumbers.forEach(stat => {
+        if (stat.textContent.match(/^\d+/)) {
+            const finalText = stat.textContent;
+            const finalValue = parseInt(finalText);
+            if (!isNaN(finalValue)) {
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 30);
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
+                        clearInterval(timer);
+                        stat.textContent = finalText; // 保持原格式（如98%）
+                    } else {
+                        stat.textContent = currentValue.toLocaleString();
+                    }
+                }, 50);
+            }
+        }
+    });
+    
+    // 为卡片添加悬停效果
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+        });
+    });
+    
+    // 为问答示例添加悬停效果
+    const qaExamples = document.querySelectorAll('.qa-example');
+    qaExamples.forEach(example => {
+        example.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.02)';
+            this.style.transition = 'transform 0.3s ease';
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        
+        example.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.backgroundColor = 'transparent';
+        });
+    });
+    
+    // 为按钮添加波浪效果
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %} 

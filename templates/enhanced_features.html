@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}增强功能 - KnowTax 智知税典{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron bg-primary text-white text-center">
+                <h1 class="display-4">
+                    <i class="fas fa-rocket"></i> 增强功能模块
+                </h1>
+                <p class="lead">体验全新的税务管理工具和智能服务</p>
+                <hr class="my-4">
+                <p>整合前端用户界面与强大的后端API服务，提供完整的税务知识管理解决方案</p>
+                <a class="btn btn-light btn-lg" href="{{ url_for('integration.dashboard') }}" role="button">
+                    <i class="fas fa-cogs"></i> 进入集成控制台
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-bullhorn fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">公告生成器</h5>
+                    <p class="card-text">自动生成标准化的税务公告HTML文件</p>
+                    <a href="{{ url_for('integration.announcement_generator') }}" class="btn btn-primary">
+                        <i class="fas fa-magic"></i> 生成公告
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-spider fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">智能爬虫</h5>
+                    <p class="card-text">监控政策更新，自动检测和处理变更</p>
+                    <a href="{{ url_for('integration.crawler_monitor') }}" class="btn btn-success">
+                        <i class="fas fa-eye"></i> 监控状态
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">知识库管理</h5>
+                    <p class="card-text">全功能的知识库CRUD操作和搜索</p>
+                    <a href="{{ url_for('integration.knowledge_management') }}" class="btn btn-info">
+                        <i class="fas fa-database"></i> 管理知识库
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">智能问答</h5>
+                    <p class="card-text">模拟LLM的智能问答系统和对话管理</p>
+                    <a href="{{ url_for('integration.qa_system') }}" class="btn btn-warning">
+                        <i class="fas fa-question"></i> 问答管理
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-code-branch fa-3x text-danger mb-3"></i>
+                    <h5 class="card-title">版本控制</h5>
+                    <p class="card-text">完整的版本管理和发布控制系统</p>
+                    <a href="{{ url_for('integration.version_control') }}" class="btn btn-danger">
+                        <i class="fas fa-history"></i> 版本管理
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-external-link-alt fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title">直接访问</h5>
+                    <p class="card-text">直接访问后端系统和API文档</p>
+                    <div class="btn-group d-grid gap-2">
+                        <a href="http://localhost:8000" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-server"></i> 后端系统
+                        </a>
+                        <a href="http://localhost:8000/docs" target="_blank" class="btn btn-outline-secondary">
+                            <i class="fas fa-book"></i> API文档
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> 使用提示</h5>
+                <ul class="mb-0">
+                    <li>确保后端服务运行在端口8000：<code>cd backend && python start_backend.py</code></li>
+                    <li>所有功能都已集成到统一的控制台界面中</li>
+                    <li>支持实时API调用和数据同步</li>
+                    <li>提供完整的错误处理和状态反馈</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Check backend status
+document.addEventListener('DOMContentLoaded', function() {
+    checkBackendStatus();
+});
+
+async function checkBackendStatus() {
+    try {
+        const response = await fetch('/integration/check-backend-status');
+        const result = await response.json();
+        
+        if (result.status === 'online') {
+            // Show success indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'alert alert-success alert-dismissible fade show';
+            indicator.innerHTML = `
+                <i class="fas fa-check-circle"></i> 后端服务在线，所有功能可用
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').prepend(indicator);
+        } else {
+            // Show warning indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'alert alert-warning alert-dismissible fade show';
+            indicator.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i> 后端服务离线，请启动后端服务以使用增强功能
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').prepend(indicator);
+        }
+    } catch (error) {
+        console.error('Failed to check backend status:', error);
+    }
+}
+</script>
+{% endblock %} 

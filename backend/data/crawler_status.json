@@ -1,20 +1,8 @@
 {
   "status": "idle",
-  "last_check": "2025-06-05T17:01:09.476367",
-  "last_update": "2025-06-05T17:01:06.160772",
-  "total_checks": 15,
-  "updates_found": 9,
-  "errors": 0,
-  "files_checked": [
-    "announcement_IIT-2024-003_20250605_153332.html",
-    "announcement_IIT-2024-003_20250605_154028.html",
-    "announcement_IIT-2024-003_20250605_155025.html",
-    "announcement_VAT-2024-001_20250605_155006.html",
-    "announcement_VAT-2024-001_20250605_164109.html",
-    "sample_announcement_1.html",
-    "sample_announcement_2.html",
-    "sample_announcement_3.html"
-  ],
-  "last_status_update": "2025-06-05T17:01:09.476367",
-  "files_count": 8
+  "last_status_update": "2025-06-05T18:56:50.352586",
+  "total_checks": 6,
+  "last_check": "2025-06-05T18:56:50.353589",
+  "updates_found": 5,
+  "last_update": "2025-06-05T18:56:50.353589"
 }

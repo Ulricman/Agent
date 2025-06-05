@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "has_updates": true,
+  "updates": [
+    {
+      "type": "modified_file",
+      "filename": "sample_announcement_1.html",
+      "old_hash": "6fe0f098cbf6b7c9f06871630ef48c21",
+      "new_hash": "4070a2c38786a24a3b7b563aa1175cf8",
+      "timestamp": "2025-06-05T18:56:50.352586"
+    },
+    {
+      "type": "modified_file",
+      "filename": "sample_announcement_2.html",
+      "old_hash": "0dbce0d7d7d60a80fc32cace290d5471",
+      "new_hash": "02cd572ffa4413019a4504c5e26d3fb7",
+      "timestamp": "2025-06-05T18:56:50.352586"
+    },
+    {
+      "type": "modified_file",
+      "filename": "sample_announcement_3.html",
+      "old_hash": "411d12f3c1cdccf893a30c5efe7063ff",
+      "new_hash": "8eb7ecd55db5ab00049e67a5af77367b",
+      "timestamp": "2025-06-05T18:56:50.352586"
+    },
+    {
+      "type": "simulated_update",
+      "update_type": "penalty_update",
+      "description": "税务处罚标准更新，需要更新相关法规条文",
+      "priority": "medium",
+      "category": "行政处罚",
+      "timestamp": "2025-06-05T18:56:50.352586",
+      "simulated": true,
+      "is_fixed_process": true
+    }
+  ],
+  "check_time": "2025-06-05T18:56:50.354589",
+  "files_checked": 12,
+  "changes_found": 4
+}

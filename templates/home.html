@@ -13,7 +13,7 @@
         <li></li>
         <li></li>
     </ul>
-    <div class="menu-btn">
+    <div class="menu-btn" onclick="toggleSidebar()">
         <i class="icon iconfont icon-menu"></i>
     </div>
     <div class="location">
@@ -23,10 +23,10 @@
     <h3>KnowTax 智知税典</h3>
 </div>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <h4>KnowTax 智知税典</h4>
-        <div class="close-btn">
+        <div class="close-btn" onclick="toggleSidebar()">
             <i class="icon iconfont icon-close"></i>
         </div>
     </div>
@@ -99,6 +99,24 @@
                 <a href="{{ url_for('data.terms') }}" class="menu-item">
                     <i class="fas fa-glossary"></i>
                     <span>词库</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h2>增强功能</h2>
+            <div class="menu-grid">
+                <a href="{{ url_for('integration.dashboard') }}" class="menu-item highlight">
+                    <i class="fas fa-cogs"></i>
+                    <span>后端系统集成</span>
+                </a>
+                <a href="http://localhost:8000" target="_blank" class="menu-item">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>直接访问后端</span>
+                </a>
+                <a href="http://localhost:8000/docs" target="_blank" class="menu-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>API文档</span>
                 </a>
             </div>
         </div>
@@ -284,7 +302,42 @@
 		}  
 		$(function(){  
 			setInterval('autoScroll(".maquee")',2000);
-		}) 
+		})
+		
+		// 侧边栏切换功能
+		function toggleSidebar() {
+			const sidebar = document.getElementById('sidebar');
+			const overlay = document.querySelector('.overlay');
+			const body = document.body;
+			
+			// 检查侧边栏当前状态
+			if (sidebar.classList.contains('active')) {
+				// 隐藏侧边栏
+				sidebar.classList.remove('active');
+				body.classList.remove('sidebar-open');
+				if (overlay) overlay.classList.remove('active');
+			} else {
+				// 显示侧边栏
+				sidebar.classList.add('active');
+				body.classList.add('sidebar-open');
+				if (overlay) overlay.classList.add('active');
+			}
+		}
+		
+		// 创建遮罩层
+		function createOverlay() {
+			if (!document.querySelector('.overlay')) {
+				const overlay = document.createElement('div');
+				overlay.className = 'overlay';
+				overlay.onclick = toggleSidebar;
+				document.body.appendChild(overlay);
+			}
+		}
+		
+		// 页面加载完成后创建遮罩层
+		document.addEventListener('DOMContentLoaded', function() {
+			createOverlay();
+		});
 </script> 
 </body>
 </html>
