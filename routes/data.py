@@ -24,17 +24,17 @@ terms_data = [
 # 税务政策库
 @data_bp.route('/policies')
 def policies():
-    return render_template("table.html", title="税务政策库", headers=policies_data[0], data=policies_data[1:], add_new_url="/data/policies/add")
+    return render_template("policies_intro.html", title="税务政策库")
 
 # 问答库
 @data_bp.route('/qa')
 def qa():
-    return render_template("table.html", title="问答库", headers=qa_data[0], data=qa_data[1:], add_new_url="/data/qa/add")
+    return render_template("qa_intro.html", title="问答库")
 
 # 词库
 @data_bp.route('/terms')
 def terms():
-    return render_template("table.html", title="词库", headers=terms_data[0], data=terms_data[1:], add_new_url="/data/terms/add")
+    return render_template("terms_intro.html", title="词库")
 
 # 权限管理
 #@data_bp.route('/permission')

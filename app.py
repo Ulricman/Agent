@@ -4,6 +4,7 @@ from routes.admin import admin_bp
 from routes.manager import manager_bp
 from routes.service import service_bp
 from routes.data import data_bp
+from routes.backend import backend_bp
 from models.user import db, User
 
 app = Flask(__name__)
@@ -22,6 +23,11 @@ app.register_blueprint(admin_bp, url_prefix="/admin")
 app.register_blueprint(manager_bp, url_prefix="/manager")
 app.register_blueprint(service_bp, url_prefix="/service")
 app.register_blueprint(data_bp, url_prefix="/data")
+app.register_blueprint(backend_bp, url_prefix="/backend")
+
+# 注册新的集成蓝图
+from routes.integration import integration_bp
+app.register_blueprint(integration_bp)
 
 
 @app.route("/")

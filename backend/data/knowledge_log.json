@@ -1,17 +1,4 @@
-[
-  {
-    "timestamp": "2025-06-05T15:18:58.879196",
-    "operation": "initialize",
-    "details": {
-      "items_count": 3
-    }
-  },
-  {
-    "timestamp": "2025-06-05T15:34:36.477581",
-    "operation": "search",
-    "details": {
-      "query": "增值税一般纳税人",
-      "results_count": 1
-    }
-  }
-]
+{
+  "operations": [],
+  "created_at": "2025-06-05T18:43:01.725095"
+}

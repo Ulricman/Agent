@@ -31,35 +31,122 @@ class BackupManager:
         
         # 定义默认数据
         self.default_data = {
-            "knowledge_base.json": {
-                "items": [
-                    {
-                        "id": "kb_001",
-                        "title": "增值税基本概念",
-                        "content": "增值税是以商品（含应税劳务）在流转过程中产生的增值额作为计税依据而征收的一种流转税。",
-                        "category": "增值税",
-                        "keywords": ["增值税", "基本概念", "流转税"],
-                        "status": "active",
-                        "created_at": datetime.datetime.now().isoformat(),
-                        "updated_at": datetime.datetime.now().isoformat(),
-                        "effective_date": "2024-01-01"
-                    }
-                ]
-            },
-            "qa_database.json": {
-                "qa_pairs": [
-                    {
-                        "id": "qa_001",
-                        "question": "什么是增值税？",
-                        "answer": "增值税是对销售货物或者提供加工、修理修配劳务以及进口货物的单位和个人就其实现的增值额征收的一个税种。",
-                        "category": "增值税",
-                        "keywords": ["增值税", "税种", "定义"],
-                        "confidence": 0.95,
-                        "created_at": datetime.datetime.now().isoformat(),
-                        "updated_at": datetime.datetime.now().isoformat()
-                    }
-                ]
-            },
+            "knowledge_base.json": [
+                {
+                    "id": "kb_001",
+                    "title": "增值税一般纳税人标准",
+                    "content": "年应征增值税销售额超过500万元的纳税人应当申请认定为增值税一般纳税人。年应税销售额未超过规定标准的纳税人，会计核算健全，能够提供准确税务资料的，可以申请成为一般纳税人。",
+                    "category": "增值税",
+                    "keywords": ["增值税", "一般纳税人", "认定标准", "销售额"],
+                    "effective_date": "2024-01-01",
+                    "status": "active",
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "增值税暂行条例实施细则",
+                    "related_policies": ["VAT-2024-001"],
+                    "priority": "high"
+                },
+                {
+                    "id": "kb_002", 
+                    "title": "企业所得税税率",
+                    "content": "企业所得税的税率为25%。符合条件的小型微利企业，减按20%的税率征收企业所得税。国家需要重点扶持的高新技术企业，减按15%的税率征收企业所得税。",
+                    "category": "企业所得税",
+                    "keywords": ["企业所得税", "税率", "小微企业", "高新技术企业"],
+                    "effective_date": "2024-01-01",
+                    "status": "active",
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "企业所得税法",
+                    "related_policies": ["CIT-2024-002"],
+                    "priority": "high"
+                },
+                {
+                    "id": "kb_003",
+                    "title": "个人所得税起征点",
+                    "content": "个人所得税起征点为每月5000元。个人所得税税率按照累进税率计算，税率为3%至45%。",
+                    "category": "个人所得税",
+                    "keywords": ["个人所得税", "起征点", "累进税率"],
+                    "effective_date": "2024-01-01",
+                    "status": "active",
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "个人所得税法",
+                    "related_policies": ["IIT-2024-003"],
+                    "priority": "high"
+                }
+            ],
+            "qa_database.json": [
+                {
+                    "id": "qa_001",
+                    "question": "增值税一般纳税人的认定标准是什么？",
+                    "answer": "增值税一般纳税人的认定标准主要有：1）年应征增值税销售额超过500万元；2）年应税销售额未超过标准但会计核算健全，能够提供准确税务资料的纳税人也可申请认定。",
+                    "category": "增值税",
+                    "keywords": ["增值税", "一般纳税人", "认定标准"],
+                    "confidence": 0.95,
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "增值税暂行条例",
+                    "related_questions": ["qa_002"],
+                    "priority": "high",
+                    "status": "active"
+                },
+                {
+                    "id": "qa_002",
+                    "question": "小规模纳税人和一般纳税人有什么区别？",
+                    "answer": "主要区别包括：1）认定标准不同：一般纳税人年销售额超过500万元，小规模纳税人不超过500万元；2）税率不同：一般纳税人适用13%、9%等税率，小规模纳税人征收率为3%；3）进项税抵扣：一般纳税人可以抵扣进项税，小规模纳税人不能抵扣。",
+                    "category": "增值税",
+                    "keywords": ["小规模纳税人", "一般纳税人", "区别", "税率"],
+                    "confidence": 0.92,
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "增值税暂行条例",
+                    "related_questions": ["qa_001"],
+                    "priority": "high",
+                    "status": "active"
+                },
+                {
+                    "id": "qa_003",
+                    "question": "企业所得税的税率是多少？",
+                    "answer": "企业所得税税率为：1）一般企业：25%；2）符合条件的小型微利企业：20%；3）国家重点扶持的高新技术企业：15%。小型微利企业还可享受减半征收等优惠政策。",
+                    "category": "企业所得税",
+                    "keywords": ["企业所得税", "税率", "小微企业", "高新技术企业"],
+                    "confidence": 0.98,
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "企业所得税法",
+                    "related_questions": [],
+                    "priority": "high",
+                    "status": "active"
+                },
+                {
+                    "id": "qa_004",
+                    "question": "个人所得税的起征点是多少？",
+                    "answer": "个人所得税起征点为每月5000元（年度6万元）。超过起征点的部分按照3%-45%的累进税率计算个人所得税。同时可以享受子女教育、继续教育、大病医疗、住房贷款利息、住房租金、赡养老人等专项附加扣除。",
+                    "category": "个人所得税",
+                    "keywords": ["个人所得税", "起征点", "累进税率", "专项附加扣除"],
+                    "confidence": 0.96,
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "个人所得税法",
+                    "related_questions": [],
+                    "priority": "high",
+                    "status": "active"
+                },
+                {
+                    "id": "qa_005",
+                    "question": "如何办理税务登记？",
+                    "answer": "税务登记办理流程：1）准备材料：营业执照、组织机构代码证、法人身份证等；2）到主管税务机关申请；3）填写税务登记表；4）提交相关材料；5）税务机关审核；6）领取税务登记证。现在多数地区已实现多证合一，可通过网上办税服务厅办理。",
+                    "category": "税务登记",
+                    "keywords": ["税务登记", "办理流程", "材料", "网上办税"],
+                    "confidence": 0.89,
+                    "created_at": datetime.datetime.now().isoformat(),
+                    "updated_at": datetime.datetime.now().isoformat(),
+                    "source": "税务登记管理办法",
+                    "related_questions": [],
+                    "priority": "medium",
+                    "status": "active"
+                }
+            ],
             "system_log.json": {
                 "logs": [],
                 "created_at": datetime.datetime.now().isoformat()

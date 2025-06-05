@@ -124,7 +124,14 @@ class QASystem:
         """Load QA data from file"""
         try:
             with open(self.data_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                # Handle both formats: direct list or wrapped in "qa_pairs" key
+                if isinstance(data, list):
+                    return data
+                elif isinstance(data, dict) and "qa_pairs" in data:
+                    return data["qa_pairs"]
+                else:
+                    return []
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端系统集成 - KnowTax 智知税典</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .highlight { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); }
+        .bg-gradient-primary { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-home"></i> KnowTax 智知税典
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/auth/logout">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </a>
+            </div>
+        </div>
+    </nav>
+<div class="container-fluid mt-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-cogs"></i> KnowTax 后端系统集成控制台
+                    </h2>
+                    <p class="card-text mt-2">智能税务知识管理 - 全功能后端API集成界面</p>
+                    <div class="btn-group" role="group">
+                        <a href="http://localhost:8000" target="_blank" class="btn btn-light">
+                            <i class="fas fa-external-link-alt"></i> 访问后端系统
+                        </a>
+                        <a href="http://localhost:8000/docs" target="_blank" class="btn btn-outline-light">
+                            <i class="fas fa-book"></i> API文档
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-success mb-2">
+                        <i class="fas fa-server fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">后端状态</h5>
+                    <p class="card-text" id="backend-status">检查中...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-info mb-2">
+                        <i class="fas fa-database fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">知识库条目</h5>
+                    <p class="card-text" id="knowledge-count">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-question-circle fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">问答对数量</h5>
+                    <p class="card-text" id="qa-count">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-danger mb-2">
+                        <i class="fas fa-spider fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">爬虫状态</h5>
+                    <p class="card-text" id="crawler-status">未知</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Function Tabs -->
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-announcement-tab" data-bs-toggle="tab" data-bs-target="#nav-announcement" type="button" role="tab">
+                        <i class="fas fa-bullhorn"></i> 公告生成器
+                    </button>
+                    <button class="nav-link" id="nav-crawler-tab" data-bs-toggle="tab" data-bs-target="#nav-crawler" type="button" role="tab">
+                        <i class="fas fa-spider"></i> 爬虫控制
+                    </button>
+                    <button class="nav-link" id="nav-knowledge-tab" data-bs-toggle="tab" data-bs-target="#nav-knowledge" type="button" role="tab">
+                        <i class="fas fa-brain"></i> 知识库管理
+                    </button>
+                    <button class="nav-link" id="nav-qa-tab" data-bs-toggle="tab" data-bs-target="#nav-qa" type="button" role="tab">
+                        <i class="fas fa-comments"></i> 问答系统
+                    </button>
+                    <button class="nav-link" id="nav-version-tab" data-bs-toggle="tab" data-bs-target="#nav-version" type="button" role="tab">
+                        <i class="fas fa-code-branch"></i> 版本管理
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content mt-3" id="nav-tabContent">
+                
+                <!-- Announcement Generator Tab -->
+                <div class="tab-pane fade show active" id="nav-announcement" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-bullhorn"></i> 税务公告生成器</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>生成示例公告</h6>
+                                    <p class="text-muted">快速生成标准税务公告示例</p>
+                                    <button class="btn btn-primary" onclick="generateExampleAnnouncement()">
+                                        <i class="fas fa-magic"></i> 生成示例公告
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>自定义公告生成</h6>
+                                    <div class="mb-3">
+                                        <label for="announcement-title" class="form-label">公告标题</label>
+                                        <input type="text" class="form-control" id="announcement-title" placeholder="请输入公告标题">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="announcement-content" class="form-label">公告内容</label>
+                                        <textarea class="form-control" id="announcement-content" rows="4" placeholder="请输入公告内容"></textarea>
+                                    </div>
+                                    <button class="btn btn-success" onclick="generateCustomAnnouncement()">
+                                        <i class="fas fa-file-alt"></i> 生成自定义公告
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-4" id="announcement-result" style="display: none;">
+                                <h6>生成结果</h6>
+                                <div class="border p-3 bg-light">
+                                    <div id="announcement-preview"></div>
+                                    <hr>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="downloadAnnouncement()">
+                                        <i class="fas fa-download"></i> 下载HTML文件
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crawler Control Tab -->
+                <div class="tab-pane fade" id="nav-crawler" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-spider"></i> 爬虫监控与控制</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>爬虫状态监控</h6>
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <p><strong>运行状态:</strong> <span id="crawler-running-status">未知</span></p>
+                                            <p><strong>最后检查:</strong> <span id="crawler-last-check">未知</span></p>
+                                            <p><strong>发现更新:</strong> <span id="crawler-updates-found">0</span> 个</p>
+                                            <p><strong>错误次数:</strong> <span id="crawler-error-count">0</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>手动控制</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary" onclick="checkCrawlerStatus()">
+                                            <i class="fas fa-eye"></i> 检查爬虫状态
+                                        </button>
+                                        <button class="btn btn-warning" onclick="triggerManualCheck()">
+                                            <i class="fas fa-play"></i> 手动触发检查
+                                        </button>
+                                        <button class="btn btn-info" onclick="viewCrawlerLogs()">
+                                            <i class="fas fa-list"></i> 查看爬虫日志
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4" id="crawler-logs" style="display: none;">
+                                <h6>爬虫日志</h6>
+                                <div class="border p-3 bg-dark text-light" style="height: 300px; overflow-y: auto;">
+                                    <pre id="crawler-logs-content"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Management Tab -->
+                <div class="tab-pane fade" id="nav-knowledge" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-brain"></i> 知识库管理</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6>添加知识条目</h6>
+                                    <div class="mb-3">
+                                        <label for="knowledge-title" class="form-label">标题</label>
+                                        <input type="text" class="form-control" id="knowledge-title" placeholder="知识条目标题">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="knowledge-content" class="form-label">内容</label>
+                                        <textarea class="form-control" id="knowledge-content" rows="4" placeholder="详细内容"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="knowledge-category" class="form-label">分类</label>
+                                        <select class="form-control" id="knowledge-category">
+                                            <option value="增值税">增值税</option>
+                                            <option value="企业所得税">企业所得税</option>
+                                            <option value="个人所得税">个人所得税</option>
+                                            <option value="其他">其他</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="knowledge-keywords" class="form-label">关键词</label>
+                                        <input type="text" class="form-control" id="knowledge-keywords" placeholder="用逗号分隔">
+                                    </div>
+                                    <button class="btn btn-success" onclick="addKnowledgeItem()">
+                                        <i class="fas fa-plus"></i> 添加知识条目
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>搜索知识库</h6>
+                                    <div class="mb-3">
+                                        <label for="knowledge-search" class="form-label">搜索关键词</label>
+                                        <input type="text" class="form-control" id="knowledge-search" placeholder="输入搜索关键词">
+                                    </div>
+                                    <button class="btn btn-primary" onclick="searchKnowledge()">
+                                        <i class="fas fa-search"></i> 搜索知识库
+                                    </button>
+                                    <hr>
+                                    <h6>批量操作</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-info" onclick="generateSampleKnowledge()">
+                                            <i class="fas fa-database"></i> 生成示例知识库
+                                        </button>
+                                        <button class="btn btn-warning" onclick="exportKnowledge()">
+                                            <i class="fas fa-download"></i> 导出知识库
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>知识库列表</h6>
+                                    <div class="border p-3" style="height: 400px; overflow-y: auto;" id="knowledge-list">
+                                        <p class="text-muted">加载中...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QA System Tab -->
+                <div class="tab-pane fade" id="nav-qa" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-comments"></i> 智能问答系统</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>提问测试</h6>
+                                    <div class="mb-3">
+                                        <label for="qa-question" class="form-label">输入问题</label>
+                                        <textarea class="form-control" id="qa-question" rows="3" placeholder="请输入您的税务问题..."></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="askQuestion()">
+                                        <i class="fas fa-question"></i> 提问
+                                    </button>
+                                    <button class="btn btn-secondary ms-2" onclick="loadQuestionChoices()">
+                                        <i class="fas fa-list"></i> 查看问题选项
+                                    </button>
+                                    
+                                    <div class="mt-4" id="qa-answer" style="display: none;">
+                                        <h6>智能回答</h6>
+                                        <div class="alert alert-info">
+                                            <div id="qa-answer-content"></div>
+                                            <hr>
+                                            <small class="text-muted">
+                                                置信度: <span id="qa-confidence"></span>%
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>添加问答对</h6>
+                                    <div class="mb-3">
+                                        <label for="qa-new-question" class="form-label">问题</label>
+                                        <input type="text" class="form-control" id="qa-new-question" placeholder="新问题">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="qa-new-answer" class="form-label">答案</label>
+                                        <textarea class="form-control" id="qa-new-answer" rows="4" placeholder="标准答案"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="qa-new-category" class="form-label">分类</label>
+                                        <select class="form-control" id="qa-new-category">
+                                            <option value="申报流程">申报流程</option>
+                                            <option value="税率计算">税率计算</option>
+                                            <option value="政策解读">政策解读</option>
+                                            <option value="其他">其他</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-success" onclick="addQAPair()">
+                                        <i class="fas fa-plus"></i> 添加问答对
+                                    </button>
+                                    <hr>
+                                    <button class="btn btn-info" onclick="generateSampleQA()">
+                                        <i class="fas fa-magic"></i> 生成示例问答
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Question Choices Panel -->
+                            <div class="mt-4" id="question-choices" style="display: none;">
+                                <h6>常见问题选择</h6>
+                                <div class="row" id="question-choices-list">
+                                    <!-- Question buttons will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version Management Tab -->
+                <div class="tab-pane fade" id="nav-version" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-code-branch"></i> 版本管理</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>当前版本信息</h6>
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <p><strong>版本号:</strong> <span id="current-version">1.0.0</span></p>
+                                            <p><strong>发布日期:</strong> <span id="release-date">2024-01-01</span></p>
+                                            <p><strong>描述:</strong> <span id="version-description">初始版本</span></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h6 class="mt-4">版本历史</h6>
+                                    <div class="border p-3" style="height: 200px; overflow-y: auto;" id="version-history">
+                                        <p class="text-muted">加载中...</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>创建新版本</h6>
+                                    <div class="mb-3">
+                                        <label for="new-version-number" class="form-label">版本号</label>
+                                        <input type="text" class="form-control" id="new-version-number" placeholder="例如: 1.1.0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="new-version-description" class="form-label">版本描述</label>
+                                        <textarea class="form-control" id="new-version-description" rows="3" placeholder="版本更新说明..."></textarea>
+                                    </div>
+                                    <button class="btn btn-success" onclick="createVersion()">
+                                        <i class="fas fa-plus"></i> 创建版本
+                                    </button>
+                                    
+                                    <hr>
+                                    <h6>版本操作</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary" onclick="loadVersionHistory()">
+                                            <i class="fas fa-history"></i> 刷新版本历史
+                                        </button>
+                                        <button class="btn btn-warning" onclick="exportVersionData()">
+                                            <i class="fas fa-download"></i> 导出版本数据
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Check Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">操作状态</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">处理中...</span>
+                    </div>
+                    <p class="mt-2" id="status-message">正在处理请求...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const BACKEND_URL = 'http://localhost:8000';
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    checkBackendConnection();
+    loadInitialData();
+});
+
+// Backend connection check
+async function checkBackendConnection() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/system/status`);
+        if (response.ok) {
+            document.getElementById('backend-status').innerHTML = '<span class="text-success">在线</span>';
+        } else {
+            document.getElementById('backend-status').innerHTML = '<span class="text-danger">离线</span>';
+        }
+    } catch (error) {
+        document.getElementById('backend-status').innerHTML = '<span class="text-danger">连接失败</span>';
+    }
+}
+
+// Load initial data
+async function loadInitialData() {
+    try {
+        // Load knowledge count
+        const knowledgeResponse = await fetch(`${BACKEND_URL}/knowledge`);
+        if (knowledgeResponse.ok) {
+            const knowledge = await knowledgeResponse.json();
+            document.getElementById('knowledge-count').textContent = knowledge.data.length;
+        }
+
+        // Load QA count
+        const qaResponse = await fetch(`${BACKEND_URL}/qa`);
+        if (qaResponse.ok) {
+            const qa = await qaResponse.json();
+            document.getElementById('qa-count').textContent = qa.data.length;
+        }
+
+        // Load crawler status
+        const crawlerResponse = await fetch(`${BACKEND_URL}/crawler/status`);
+        if (crawlerResponse.ok) {
+            const crawler = await crawlerResponse.json();
+            document.getElementById('crawler-status').innerHTML = 
+                `<span class="text-${crawler.data.status === 'running' ? 'success' : 'warning'}">${crawler.data.status}</span>`;
+        }
+    } catch (error) {
+        console.error('Failed to load initial data:', error);
+    }
+}
+
+// Announcement Generator Functions
+async function generateExampleAnnouncement() {
+    showInfoMessage('正在生成示例公告...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/html/generate-example`, {
+            method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayAnnouncementResult(result.data.html_content);
+            showSuccessMessage('示例公告生成成功！');
+        } else {
+            showErrorMessage('生成公告失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('生成公告时发生错误: ' + error.message);
+    }
+}
+
+async function generateCustomAnnouncement() {
+    const title = document.getElementById('announcement-title').value;
+    const content = document.getElementById('announcement-content').value;
+    
+    if (!title || !content) {
+        showErrorMessage('请填写公告标题和内容');
+        return;
+    }
+    
+    showInfoMessage('正在生成自定义公告...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/html/generate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                type: 'announcement'
+            })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayAnnouncementResult(result.data.html_content);
+            showSuccessMessage('自定义公告生成成功！');
+        } else {
+            showErrorMessage('生成公告失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('生成公告时发生错误: ' + error.message);
+    }
+}
+
+function displayAnnouncementResult(htmlContent) {
+    document.getElementById('announcement-preview').innerHTML = htmlContent;
+    document.getElementById('announcement-result').style.display = 'block';
+    window.generatedHtml = htmlContent; // Store for download
+}
+
+function downloadAnnouncement() {
+    if (window.generatedHtml) {
+        const blob = new Blob([window.generatedHtml], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'tax_announcement.html';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+}
+
+// Crawler Control Functions
+async function checkCrawlerStatus() {
+    showInfoMessage('正在检查爬虫状态...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/crawler/status`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            const status = result.data;
+            document.getElementById('crawler-running-status').textContent = status.status;
+            document.getElementById('crawler-last-check').textContent = status.last_check || '从未检查';
+            document.getElementById('crawler-updates-found').textContent = status.updates_found || 0;
+            document.getElementById('crawler-error-count').textContent = status.error_count || 0;
+            showSuccessMessage('爬虫状态获取成功');
+        } else {
+            showErrorMessage('获取爬虫状态失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('检查爬虫状态时发生错误: ' + error.message);
+    }
+}
+
+async function triggerManualCheck() {
+    showInfoMessage('正在手动触发爬虫检查...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/crawler/check`, {
+            method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('爬虫检查已触发成功');
+            checkCrawlerStatus(); // Refresh status
+        } else {
+            showErrorMessage('触发爬虫检查失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('触发爬虫检查时发生错误: ' + error.message);
+    }
+}
+
+async function viewCrawlerLogs() {
+    showStatus('正在获取爬虫日志...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/system/logs?type=crawler`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('crawler-logs-content').textContent = 
+                result.data.logs.join('\n') || '暂无日志记录';
+            document.getElementById('crawler-logs').style.display = 'block';
+            hideStatus();
+        } else {
+            alert('获取爬虫日志失败: ' + result.message);
+            hideStatus();
+        }
+    } catch (error) {
+        alert('获取爬虫日志时发生错误: ' + error.message);
+        hideStatus();
+    }
+}
+
+// Knowledge Management Functions
+async function addKnowledgeItem() {
+    const title = document.getElementById('knowledge-title').value;
+    const content = document.getElementById('knowledge-content').value;
+    const category = document.getElementById('knowledge-category').value;
+    const keywords = document.getElementById('knowledge-keywords').value;
+    
+    if (!title || !content) {
+        showErrorMessage('请填写标题和内容');
+        return;
+    }
+    
+    showInfoMessage('正在添加知识条目...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/knowledge/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                category: category,
+                keywords: keywords.split(',').map(k => k.trim()).filter(k => k)
+            })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('知识条目添加成功！');
+            // Clear form
+            document.getElementById('knowledge-title').value = '';
+            document.getElementById('knowledge-content').value = '';
+            document.getElementById('knowledge-keywords').value = '';
+            loadKnowledgeList();
+        } else {
+            showErrorMessage('添加知识条目失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('添加知识条目时发生错误: ' + error.message);
+    }
+}
+
+async function searchKnowledge() {
+    const query = document.getElementById('knowledge-search').value;
+    if (!query) {
+        alert('请输入搜索关键词');
+        return;
+    }
+    
+    showStatus('正在搜索知识库...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/knowledge/search?q=${encodeURIComponent(query)}`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayKnowledgeResults(result.data);
+            hideStatus();
+        } else {
+            alert('搜索知识库失败: ' + result.message);
+            hideStatus();
+        }
+    } catch (error) {
+        alert('搜索知识库时发生错误: ' + error.message);
+        hideStatus();
+    }
+}
+
+async function generateSampleKnowledge() {
+    showInfoMessage('正在生成示例知识库...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/knowledge/generate-samples`, {
+            method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('示例知识库生成成功！');
+            loadKnowledgeList();
+            loadInitialData(); // Refresh counts
+        } else {
+            showErrorMessage('生成示例知识库失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('生成示例知识库时发生错误: ' + error.message);
+    }
+}
+
+async function loadKnowledgeList() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/knowledge`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayKnowledgeList(result.data);
+        }
+    } catch (error) {
+        console.error('Failed to load knowledge list:', error);
+    }
+}
+
+function displayKnowledgeList(knowledge) {
+    const listElement = document.getElementById('knowledge-list');
+    if (knowledge.length === 0) {
+        listElement.innerHTML = '<p class="text-muted">暂无知识条目</p>';
+        return;
+    }
+    
+    let html = '';
+    knowledge.forEach(item => {
+        html += `
+            <div class="card mb-2">
+                <div class="card-body p-2">
+                    <h6 class="card-title mb-1">${item.title}</h6>
+                    <p class="card-text small text-muted">${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}</p>
+                    <small class="text-muted">分类: ${item.category}</small>
+                </div>
+            </div>
+        `;
+    });
+    listElement.innerHTML = html;
+}
+
+function displayKnowledgeResults(results) {
+    displayKnowledgeList(results);
+}
+
+async function exportKnowledge() {
+    showStatus('正在导出知识库...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/knowledge/export`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            const dataStr = JSON.stringify(result.data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'knowledge_export.json';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            hideStatus();
+        } else {
+            alert('导出知识库失败: ' + result.message);
+            hideStatus();
+        }
+    } catch (error) {
+        alert('导出知识库时发生错误: ' + error.message);
+        hideStatus();
+    }
+}
+
+// QA System Functions
+async function askQuestion() {
+    const question = document.getElementById('qa-question').value;
+    if (!question) {
+        showErrorMessage('请输入问题');
+        return;
+    }
+    
+    showInfoMessage('正在智能分析问题...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/qa/ask`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayQAAnswer(result.data);
+            showSuccessMessage('问题回答成功生成！');
+        } else {
+            showErrorMessage('处理问题失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('处理问题时发生错误: ' + error.message);
+    }
+}
+
+function displayQAAnswer(answerData) {
+    document.getElementById('qa-answer-content').textContent = answerData.answer;
+    document.getElementById('qa-confidence').textContent = Math.round(answerData.confidence * 100);
+    document.getElementById('qa-answer').style.display = 'block';
+}
+
+async function loadQuestionChoices() {
+    showInfoMessage('正在加载问题选项...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/qa`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayQuestionChoices(result.data);
+            showSuccessMessage('问题选项加载完成！');
+        } else {
+            showErrorMessage('加载问题选项失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('加载问题选项时发生错误: ' + error.message);
+    }
+}
+
+function displayQuestionChoices(qaData) {
+    const listElement = document.getElementById('question-choices-list');
+    let html = '';
+    
+    qaData.forEach(item => {
+        html += `
+            <div class="col-md-6 mb-2">
+                <button class="btn btn-outline-primary w-100 text-start" onclick="selectQuestion('${item.question.replace(/'/g, "\\'")}')">
+                    ${item.question}
+                </button>
+            </div>
+        `;
+    });
+    
+    listElement.innerHTML = html;
+    document.getElementById('question-choices').style.display = 'block';
+}
+
+function selectQuestion(question) {
+    document.getElementById('qa-question').value = question;
+    document.getElementById('question-choices').style.display = 'none';
+    askQuestion();
+}
+
+async function addQAPair() {
+    const question = document.getElementById('qa-new-question').value;
+    const answer = document.getElementById('qa-new-answer').value;
+    const category = document.getElementById('qa-new-category').value;
+    
+    if (!question || !answer) {
+        showErrorMessage('请填写问题和答案');
+        return;
+    }
+    
+    showInfoMessage('正在添加问答对...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/qa/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question: question,
+                answer: answer,
+                category: category
+            })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('问答对添加成功！');
+            // Clear form
+            document.getElementById('qa-new-question').value = '';
+            document.getElementById('qa-new-answer').value = '';
+            loadInitialData(); // Refresh counts
+        } else {
+            showErrorMessage('添加问答对失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('添加问答对时发生错误: ' + error.message);
+    }
+}
+
+async function generateSampleQA() {
+    showInfoMessage('正在生成示例问答...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/qa/generate-samples`, {
+            method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('示例问答生成成功！');
+            loadInitialData(); // Refresh counts
+        } else {
+            showErrorMessage('生成示例问答失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('生成示例问答时发生错误: ' + error.message);
+    }
+}
+
+// Version Management Functions
+async function loadVersionHistory() {
+    showInfoMessage('正在加载版本历史...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/version/history`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            displayVersionHistory(result.data);
+            if (result.data.length > 0) {
+                const current = result.data.find(v => v.is_current) || result.data[0];
+                document.getElementById('current-version').textContent = current.version;
+                document.getElementById('release-date').textContent = current.release_date.split('T')[0];
+                document.getElementById('version-description').textContent = current.description;
+            }
+            showSuccessMessage('版本历史加载完成！');
+        } else {
+            showErrorMessage('加载版本历史失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('加载版本历史时发生错误: ' + error.message);
+    }
+}
+
+function displayVersionHistory(versions) {
+    const listElement = document.getElementById('version-history');
+    if (versions.length === 0) {
+        listElement.innerHTML = '<p class="text-muted">暂无版本历史</p>';
+        return;
+    }
+    
+    let html = '';
+    versions.forEach(version => {
+        html += `
+            <div class="card mb-2 ${version.is_current ? 'border-primary' : ''}">
+                <div class="card-body p-2">
+                    <h6 class="card-title mb-1">
+                        v${version.version}
+                        ${version.is_current ? '<span class="badge bg-primary">当前</span>' : ''}
+                    </h6>
+                    <p class="card-text small">${version.description}</p>
+                    <small class="text-muted">${version.release_date.split('T')[0]}</small>
+                </div>
+            </div>
+        `;
+    });
+    listElement.innerHTML = html;
+}
+
+async function createVersion() {
+    const version = document.getElementById('new-version-number').value;
+    const description = document.getElementById('new-version-description').value;
+    
+    if (!version || !description) {
+        showErrorMessage('请填写版本号和描述');
+        return;
+    }
+    
+    showInfoMessage('正在创建新版本...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/version/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                version: version,
+                description: description
+            })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccessMessage('版本创建成功！');
+            // Clear form
+            document.getElementById('new-version-number').value = '';
+            document.getElementById('new-version-description').value = '';
+            loadVersionHistory();
+        } else {
+            showErrorMessage('创建版本失败: ' + result.message);
+        }
+    } catch (error) {
+        showErrorMessage('创建版本时发生错误: ' + error.message);
+    }
+}
+
+async function exportVersionData() {
+    showStatus('正在导出版本数据...');
+    try {
+        const response = await fetch(`${BACKEND_URL}/version/export`);
+        const result = await response.json();
+        
+        if (response.ok) {
+            const dataStr = JSON.stringify(result.data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'version_export.json';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            hideStatus();
+        } else {
+            alert('导出版本数据失败: ' + result.message);
+            hideStatus();
+        }
+    } catch (error) {
+        alert('导出版本数据时发生错误: ' + error.message);
+        hideStatus();
+    }
+}
+
+// Utility Functions
+function showStatus(message) {
+    document.getElementById('status-message').textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+    modal.show();
+}
+
+function hideStatus() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('statusModal'));
+    if (modal) {
+        modal.hide();
+    }
+}
+
+function showQuickStatus(message, type = 'info', duration = 2000) {
+    // Create a toast notification instead of modal for quick feedback
+    const toastContainer = document.getElementById('toast-container') || createToastContainer();
+    
+    const toastElement = document.createElement('div');
+    toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
+    toastElement.setAttribute('role', 'alert');
+    toastElement.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    toastContainer.appendChild(toastElement);
+    const toast = new bootstrap.Toast(toastElement, { delay: duration });
+    toast.show();
+    
+    // Remove element after toast is hidden
+    toastElement.addEventListener('hidden.bs.toast', () => {
+        toastElement.remove();
+    });
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container position-fixed top-0 end-0 p-3';
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+    return container;
+}
+
+function showSuccessMessage(message) {
+    showQuickStatus(message, 'success', 3000);
+}
+
+function showErrorMessage(message) {
+    showQuickStatus(message, 'danger', 4000);
+}
+
+function showInfoMessage(message) {
+    showQuickStatus(message, 'info', 2500);
+}
+
+// Initialize on page load
+loadKnowledgeList();
+loadVersionHistory();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -198,6 +198,74 @@
 
         .search-box {
             width: 100%;
+        }
+
+        /* 最近更新样式 */
+        .update-item {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .update-item.high-priority {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .update-item.medium-priority {
+            border-left-color: #ffc107;
+            background: #fffdf5;
+        }
+
+        .update-item.low-priority {
+            border-left-color: #28a745;
+            background: #f8fff8;
+        }
+
+        .update-item.general {
+            border-left-color: #6c757d;
+            background: #f8f9fa;
+        }
+
+        .update-header {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .update-type {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: white;
+            margin-left: 8px;
+        }
+
+        .update-type.fixed {
+            background: #28a745;
+        }
+
+        .update-type.general {
+            background: #6c757d;
+        }
+
+        .update-description {
+            color: #666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .update-time {
+            color: #999;
+            font-size: 11px;
+            margin-top: 4px;
+        }
             padding: 15px;
             border: 2px solid white;
             border-radius: 25px;
@@ -311,6 +379,11 @@
                     <button class="btn btn-warning" onclick="exportKnowledge()">导出</button>
                     <button class="btn btn-primary" onclick="importKnowledge()">导入</button>
                 </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <button class="btn btn-success" onclick="autoGenerateKnowledge()" style="background: linear-gradient(45deg, #28a745, #20c997);">
+                        🤖 基于爬虫自动生成
+                    </button>
+                </div>
             </div>
 
             <!-- 问答系统管理 -->
@@ -336,6 +409,11 @@
                     <button class="btn btn-warning" onclick="testQA()">测试</button>
                     <button class="btn btn-primary" onclick="exportQA()">导出</button>
                 </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <button class="btn btn-success" onclick="autoGenerateQA()" style="background: linear-gradient(45deg, #28a745, #20c997);">
+                        🤖 基于爬虫自动生成
+                    </button>
+                </div>
             </div>
 
             <!-- 爬虫状态 -->
@@ -359,6 +437,76 @@
                     <button class="btn btn-primary" onclick="checkCrawlerStatus()">状态</button>
                     <button class="btn btn-success" onclick="runCrawler()">运行检查</button>
                     <button class="btn btn-warning" onclick="generateSampleHTML()">生成样例</button>
+                </div>
+            </div>
+
+            <!-- 智能自动生成 -->
+            <div class="card">
+                <h3>🤖 智能自动生成</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="autoGenTotal">-</div>
+                        <div class="stat-label">生成次数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="autoGenKnowledge">-</div>
+                        <div class="stat-label">知识条目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="autoGenQA">-</div>
+                        <div class="stat-label">问答条目</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="autoGenerateKnowledge()" style="background: linear-gradient(45deg, #28a745, #20c997);">
+                        📚 生成知识库
+                    </button>
+                    <button class="btn btn-success" onclick="autoGenerateQA()" style="background: linear-gradient(45deg, #17a2b8, #6f42c1);">
+                        💬 生成问答库
+                    </button>
+                </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="autoGenerateBoth()" style="background: linear-gradient(45deg, #fd7e14, #e83e8c);">
+                        🚀 同时生成知识库和问答库
+                    </button>
+                    <button class="btn btn-warning" onclick="viewAutoGenStats()">
+                        📊 查看统计
+                    </button>
+                </div>
+            </div>
+
+            <!-- 最近政策更新 -->
+            <div class="card">
+                <h3>📈 最近政策更新</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="recentUpdatesCount">-</div>
+                        <div class="stat-label">本次更新</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="fixedUpdatesCount">-</div>
+                        <div class="stat-label">固定流程</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="generalUpdatesCount">-</div>
+                        <div class="stat-label">一般提示</div>
+                    </div>
+                </div>
+                <div class="recent-updates-list" id="recentUpdatesList" style="max-height: 200px; overflow-y: auto; margin: 15px 0;">
+                    <div style="text-align: center; color: #666; padding: 20px;">
+                        暂无最近更新
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="refreshRecentUpdates()">
+                        🔄 刷新更新
+                    </button>
+                    <button class="btn btn-success" onclick="createPolicyFiles()">
+                        📄 生成演示政策
+                    </button>
+                    <button class="btn btn-warning" onclick="viewUpdateHistory()">
+                        📋 查看历史
+                    </button>
                 </div>
             </div>
 
@@ -458,6 +606,8 @@
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             loadDashboardStats();
+            loadAutoGenStats();
+            loadRecentUpdates();
             setupSearch();
         });
 
@@ -478,9 +628,15 @@
                 document.getElementById('qaRecentAdded').textContent = data.qa_system.recent_additions || 0;
 
                 // 更新爬虫统计
-                document.getElementById('crawlerChecks').textContent = data.crawler.total_checks || 0;
-                document.getElementById('crawlerUpdates').textContent = data.crawler.updates_found || 0;
-                document.getElementById('crawlerSuccess').textContent = Math.round(data.crawler.success_rate || 0) + '%';
+                if (data.crawler) {
+                    document.getElementById('crawlerChecks').textContent = data.crawler.total_checks || 0;
+                    document.getElementById('crawlerUpdates').textContent = data.crawler.updates_found || 0;
+                    document.getElementById('crawlerSuccess').textContent = Math.round(data.crawler.success_rate || 0) + '%';
+                } else {
+                    document.getElementById('crawlerChecks').textContent = '0';
+                    document.getElementById('crawlerUpdates').textContent = '0';
+                    document.getElementById('crawlerSuccess').textContent = '0%';
+                }
 
                 // 更新版本信息
                 const versions = await fetch(`${API_BASE}/versions`).then(r => r.json());
@@ -872,22 +1028,27 @@
         // 爬虫相关函数
         async function checkCrawlerStatus() {
             try {
-                const response = await fetch(`${API_BASE}/crawler/status`);
-                const status = await response.json();
+                // 使用stats API获取完整的统计信息，包括success_rate
+                const response = await fetch(`${API_BASE}/crawler/stats`);
+                const stats = await response.json();
                 
-                const content = `
-                    <div style="padding: 20px;">
-                        <h3>爬虫状态信息</h3>
-                        <p><strong>当前状态:</strong> ${status.status}</p>
-                        <p><strong>总检查次数:</strong> ${status.total_checks}</p>
-                        <p><strong>发现更新次数:</strong> ${status.updates_found}</p>
-                        <p><strong>错误次数:</strong> ${status.errors}</p>
-                        <p><strong>最后检查时间:</strong> ${status.last_check ? new Date(status.last_check).toLocaleString() : '未知'}</p>
-                        <p><strong>最后更新时间:</strong> ${status.last_update ? new Date(status.last_update).toLocaleString() : '未知'}</p>
-                        <p><strong>成功率:</strong> ${Math.round(status.success_rate || 0)}%</p>
-                    </div>
-                `;
-                showModal('爬虫状态', content);
+                if (stats) {
+                    const content = `
+                        <div style="padding: 20px;">
+                            <h3>爬虫状态信息</h3>
+                            <p><strong>当前状态:</strong> ${stats.current_status || '未知'}</p>
+                            <p><strong>总检查次数:</strong> ${stats.total_checks || 0}</p>
+                            <p><strong>发现更新次数:</strong> ${stats.updates_found || 0}</p>
+                            <p><strong>错误次数:</strong> ${stats.errors || 0}</p>
+                            <p><strong>最后检查时间:</strong> ${stats.last_check ? new Date(stats.last_check).toLocaleString() : '未知'}</p>
+                            <p><strong>最后更新时间:</strong> ${stats.last_update ? new Date(stats.last_update).toLocaleString() : '未知'}</p>
+                            <p><strong>成功率:</strong> ${Math.round(stats.success_rate || 0)}%</p>
+                        </div>
+                    `;
+                    showModal('爬虫状态', content);
+                } else {
+                    alert('获取爬虫状态失败: 无法获取统计信息');
+                }
             } catch (error) {
                 alert('获取爬虫状态失败: ' + error.message);
             }
@@ -895,24 +1056,28 @@
 
         async function runCrawler() {
             try {
-                const response = await fetch(`${API_BASE}/crawler/check`, { method: 'POST' });
+                const response = await fetch(`${API_BASE}/crawler/check-updates`, { method: 'POST' });
                 const result = await response.json();
                 
-                const content = `
-                    <div style="padding: 20px;">
-                        <h3>爬虫检查结果</h3>
-                        <p><strong>检查时间:</strong> ${new Date(result.check_time).toLocaleString()}</p>
-                        <p><strong>检查文件数:</strong> ${result.files_checked}</p>
-                        <p><strong>发现变更:</strong> ${result.has_updates ? '是' : '否'}</p>
-                        <p><strong>变更数量:</strong> ${result.changes_found}</p>
-                        ${result.updates && result.updates.length > 0 ? 
-                            '<h4>发现的更新:</h4>' + 
-                            result.updates.map(update => `<p>- ${update.description || update.type}</p>`).join('') 
-                            : ''
-                        }
-                    </div>
-                `;
-                showModal('爬虫检查结果', content);
+                if (result.success) {
+                    const content = `
+                        <div style="padding: 20px;">
+                            <h3>爬虫检查结果</h3>
+                            <p><strong>检查时间:</strong> ${result.check_time ? new Date(result.check_time).toLocaleString() : '未知'}</p>
+                            <p><strong>检查文件数:</strong> ${result.files_checked || 0}</p>
+                            <p><strong>发现变更:</strong> ${result.has_updates ? '是' : '否'}</p>
+                            <p><strong>变更数量:</strong> ${result.changes_found || 0}</p>
+                            ${result.updates && result.updates.length > 0 ? 
+                                '<h4>发现的更新:</h4>' + 
+                                result.updates.map(update => `<p>- ${update.description || update.type || '未知更新'}</p>`).join('') 
+                                : ''
+                            }
+                        </div>
+                    `;
+                    showModal('爬虫检查结果', content);
+                } else {
+                    alert('爬虫检查失败: ' + (result.error || '未知错误'));
+                }
                 loadDashboardStats();
             } catch (error) {
                 alert('运行爬虫失败: ' + error.message);
@@ -1662,6 +1827,294 @@
                 }
             } catch (error) {
                 alert('系统重置失败: ' + error.message);
+            }
+        }
+
+        // 自动生成功能
+        async function autoGenerateKnowledge() {
+            if (!confirm('确定要基于爬虫结果自动生成知识库内容吗？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auto-generate/knowledge`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`知识库自动生成成功！\n新增条目：${result.generated.knowledge_items}条\n基于爬虫更新：${result.crawler_updates}个`);
+                    loadDashboardStats(); // 刷新统计数据
+                    loadAutoGenStats(); // 刷新自动生成统计
+                } else {
+                    alert('自动生成失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('自动生成失败: ' + error.message);
+            }
+        }
+
+        async function autoGenerateQA() {
+            if (!confirm('确定要基于爬虫结果自动生成问答库内容吗？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auto-generate/qa`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`问答库自动生成成功！\n新增条目：${result.generated.qa_items}条\n基于爬虫更新：${result.crawler_updates}个`);
+                    loadDashboardStats(); // 刷新统计数据
+                    loadAutoGenStats(); // 刷新自动生成统计
+                } else {
+                    alert('自动生成失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('自动生成失败: ' + error.message);
+            }
+        }
+
+        async function autoGenerateBoth() {
+            if (!confirm('确定要基于爬虫结果同时自动生成知识库和问答库内容吗？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auto-generate/both`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`自动生成完成！\n知识库新增：${result.generated.knowledge_items}条\n问答库新增：${result.generated.qa_items}条\n基于爬虫更新：${result.crawler_updates}个`);
+                    loadDashboardStats(); // 刷新统计数据
+                    loadAutoGenStats(); // 刷新自动生成统计
+                } else {
+                    alert('自动生成失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('自动生成失败: ' + error.message);
+            }
+        }
+
+        async function viewAutoGenStats() {
+            try {
+                const response = await fetch(`${API_BASE}/auto-generate/stats`);
+                const stats = await response.json();
+                
+                let html = '<div>';
+                html += '<h4>📊 自动生成统计信息</h4>';
+                
+                if (stats.error) {
+                    html += '<p style="color: red;">获取统计信息失败: ' + stats.error + '</p>';
+                } else {
+                    html += `
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>总生成次数:</strong></span>
+                                <span>${stats.total_generations || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>知识库条目生成:</strong></span>
+                                <span>${stats.total_knowledge_generated || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>问答库条目生成:</strong></span>
+                                <span>${stats.total_qa_generated || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>最后生成时间:</strong></span>
+                                <span>${stats.last_generation ? new Date(stats.last_generation).toLocaleString('zh-CN') : '暂无'}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    html += `
+                        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <h5>💡 使用说明</h5>
+                            <ul style="text-align: left; margin: 10px 0;">
+                                <li>自动生成功能基于爬虫检测到的更新内容</li>
+                                <li>系统会智能分析更新类型并生成相应的知识条目</li>
+                                <li>生成的内容包含税务政策、法规解读、问答对等</li>
+                                <li>建议定期运行爬虫检查后使用自动生成功能</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                
+                showModal('自动生成统计', html);
+            } catch (error) {
+                alert('获取统计信息失败: ' + error.message);
+            }
+        }
+
+        async function loadAutoGenStats() {
+            try {
+                const response = await fetch(`${API_BASE}/auto-generate/stats`);
+                const stats = await response.json();
+                
+                if (!stats.error) {
+                    document.getElementById('autoGenTotal').textContent = stats.total_generations || 0;
+                    document.getElementById('autoGenKnowledge').textContent = stats.total_knowledge_generated || 0;
+                    document.getElementById('autoGenQA').textContent = stats.total_qa_generated || 0;
+                }
+            } catch (error) {
+                console.error('Failed to load auto-generation stats:', error);
+            }
+        }
+
+        // 最近更新相关函数
+        async function refreshRecentUpdates() {
+            try {
+                showModal('处理中', '<div style="text-align: center;"><p>正在刷新最近更新...</p></div>');
+                
+                const response = await fetch(`${API_BASE}/crawler/check-updates`, { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateRecentUpdatesDisplay(data);
+                    closeModal();
+                    alert('更新检查完成');
+                } else {
+                    alert('更新检查失败: ' + data.message);
+                    closeModal();
+                }
+            } catch (error) {
+                alert('刷新更新时出错: ' + error.message);
+                closeModal();
+            }
+        }
+
+        async function createPolicyFiles() {
+            try {
+                showModal('处理中', '<div style="text-align: center;"><p>正在生成演示政策文件...</p></div>');
+                
+                const response = await fetch(`${API_BASE}/generate-policy-files`, { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`成功生成 ${data.files_created} 个政策文件`);
+                    // 刷新更新列表
+                    refreshRecentUpdates();
+                } else {
+                    alert('生成政策文件失败: ' + data.message);
+                    closeModal();
+                }
+            } catch (error) {
+                alert('生成政策文件时出错: ' + error.message);
+                closeModal();
+            }
+        }
+
+        async function viewUpdateHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/crawler/status`);
+                const data = await response.json();
+                
+                let html = '<div>';
+                html += '<h4>📋 更新历史</h4>';
+                
+                if (data.success) {
+                    html += `
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>总检查次数:</strong></span>
+                                <span>${data.status.total_checks || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>发现更新:</strong></span>
+                                <span>${data.status.updates_found || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>最后检查:</strong></span>
+                                <span>${data.status.last_check ? new Date(data.status.last_check).toLocaleString('zh-CN') : '暂无'}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>运行状态:</strong></span>
+                                <span>${data.status.status || '未知'}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>监控文件:</strong></span>
+                                <span>${data.status.files_monitored || 0}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span><strong>错误次数:</strong></span>
+                                <span>${data.status.error_count || 0}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += '<p style="color: red;">获取更新历史失败: ' + data.message + '</p>';
+                }
+                
+                html += '</div>';
+                showModal('更新历史', html);
+            } catch (error) {
+                alert('获取更新历史时出错: ' + error.message);
+            }
+        }
+
+        function updateRecentUpdatesDisplay(data) {
+            const recentUpdatesList = document.getElementById('recentUpdatesList');
+            const recentUpdatesCount = document.getElementById('recentUpdatesCount');
+            const fixedUpdatesCount = document.getElementById('fixedUpdatesCount');
+            const generalUpdatesCount = document.getElementById('generalUpdatesCount');
+            
+            if (data.updates && data.updates.length > 0) {
+                let fixedCount = 0;
+                let generalCount = 0;
+                
+                const updatesHtml = data.updates.map(update => {
+                    const isFixed = update.is_fixed_process !== false;
+                    if (isFixed) fixedCount++;
+                    else generalCount++;
+                    
+                    const priorityClass = update.priority || 'medium';
+                    const typeClass = isFixed ? 'fixed' : 'general';
+                    const typeLabel = isFixed ? '固定流程' : '一般提示';
+                    
+                    return `
+                        <div class="update-item ${priorityClass}-priority ${typeClass}">
+                            <div class="update-header">
+                                <span>${update.category || '未分类'}</span>
+                                <span class="update-type ${typeClass}">${typeLabel}</span>
+                            </div>
+                            <div class="update-description">${update.description || '暂无描述'}</div>
+                            <div class="update-time">优先级: ${update.priority || 'medium'} | ${new Date(update.timestamp).toLocaleString('zh-CN')}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                recentUpdatesList.innerHTML = updatesHtml;
+                recentUpdatesCount.textContent = data.updates.length;
+                fixedUpdatesCount.textContent = fixedCount;
+                generalUpdatesCount.textContent = generalCount;
+            } else {
+                recentUpdatesList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">暂无最近更新</div>';
+                recentUpdatesCount.textContent = '0';
+                fixedUpdatesCount.textContent = '0';
+                generalUpdatesCount.textContent = '0';
+            }
+        }
+
+        async function loadRecentUpdates() {
+            try {
+                const response = await fetch(`${API_BASE}/crawler/check-updates`, { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateRecentUpdatesDisplay(data);
+                }
+            } catch (error) {
+                console.error('Failed to load recent updates:', error);
             }
         }
 

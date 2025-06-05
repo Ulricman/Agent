@@ -17,6 +17,8 @@ from modules.knowledge_base import KnowledgeBase
 from modules.qa_system import QASystem
 from modules.logger import StructuredLogger
 from modules.backup_manager import BackupManager
+from modules.auto_generator import AutoGenerator
+from modules.policy_html_generator import PolicyHTMLGenerator
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -44,6 +46,8 @@ crawler = AnnouncementCrawler()
 knowledge_base = KnowledgeBase()
 qa_system = QASystem()
 backup_mgr = BackupManager()
+auto_gen = AutoGenerator()
+policy_gen = PolicyHTMLGenerator()
 
 @app.on_event("startup")
 async def startup_event():
@@ -60,7 +64,7 @@ async def startup_event():
 
 # Pydantic models
 class TaxItem(BaseModel):
-    id: str
+    id: Optional[str] = None
     title: str
     content: str
     category: str
@@ -68,7 +72,7 @@ class TaxItem(BaseModel):
     status: str = "active"
 
 class QAItem(BaseModel):
-    id: str
+    id: Optional[str] = None
     question: str
     answer: str
     category: str
@@ -118,7 +122,7 @@ async def rollback_version(version: str):
     return result
 
 # Crawler Endpoints
-@app.post("/api/crawler/check")
+@app.post("/api/crawler/check-updates")
 async def check_for_updates():
     """Manually trigger crawler to check for new announcements"""
     result = await crawler.check_for_updates()
@@ -129,6 +133,11 @@ async def check_for_updates():
 async def get_crawler_status():
     """Get current crawler status"""
     return await crawler.get_status()
+
+@app.get("/api/crawler/stats")
+async def get_crawler_stats():
+    """Get crawler statistics"""
+    return await crawler.get_stats()
 
 @app.post("/api/crawler/parse")
 async def parse_html(html_path: str):
@@ -145,8 +154,12 @@ async def get_knowledge_items():
 @app.post("/api/knowledge")
 async def add_knowledge_item(item: TaxItem):
     """Add new knowledge item"""
-    result = await knowledge_base.add_item(item.dict())
-    logger.log_info(f"Knowledge item added: {item.id}")
+    item_dict = item.dict()
+    # Remove None id to let the system generate one
+    if item_dict.get('id') is None:
+        item_dict.pop('id', None)
+    result = await knowledge_base.add_item(item_dict)
+    logger.log_info(f"Knowledge item added: {item_dict.get('id', 'unknown')}")
     return result
 
 @app.put("/api/knowledge/{item_id}")
@@ -189,8 +202,12 @@ async def get_qa_items():
 @app.post("/api/qa")
 async def add_qa_item(item: QAItem):
     """Add new QA item"""
-    result = await qa_system.add_item(item.dict())
-    logger.log_info(f"QA item added: {item.id}")
+    item_dict = item.dict()
+    # Remove None id to let the system generate one
+    if item_dict.get('id') is None:
+        item_dict.pop('id', None)
+    result = await qa_system.add_item(item_dict)
+    logger.log_info(f"QA item added: {item_dict.get('id', 'unknown')}")
     return result
 
 @app.put("/api/qa/{item_id}")
@@ -228,6 +245,51 @@ async def init_qa_from_file(file_path: str):
 async def export_qa():
     """Export entire QA database"""
     return await qa_system.export_all()
+
+# Auto Generation Endpoints
+@app.post("/api/auto-generate/knowledge")
+async def auto_generate_knowledge():
+    """基于爬虫结果自动生成知识库内容"""
+    result = await auto_gen.auto_generate_from_crawler()
+    logger.log_info("Auto-generated knowledge from crawler results")
+    return result
+
+@app.post("/api/auto-generate/qa")
+async def auto_generate_qa():
+    """基于爬虫结果自动生成问答库内容"""
+    result = await auto_gen.auto_generate_from_crawler()
+    logger.log_info("Auto-generated QA from crawler results")
+    return result
+
+@app.post("/api/auto-generate/both")
+async def auto_generate_both():
+    """基于爬虫结果同时自动生成知识库和问答库内容"""
+    result = await auto_gen.auto_generate_from_crawler()
+    logger.log_info("Auto-generated both knowledge and QA from crawler results")
+    return result
+
+@app.get("/api/auto-generate/stats")
+async def get_auto_generate_stats():
+    """获取自动生成统计信息"""
+    return await auto_gen.get_stats()
+
+@app.post("/api/auto-generate/reset")
+async def reset_auto_generator():
+    """重置自动生成器"""
+    result = await auto_gen.reset_auto_generator()
+    logger.log_info("Auto-generator reset")
+    return result
+
+@app.post("/api/generate-policy-files")
+async def generate_policy_files():
+    """Generate default policy HTML files for demonstration"""
+    try:
+        result = await policy_gen.create_default_policy_files()
+        logger.log_info(f"Generated {result.get('files_created', 0)} policy files")
+        return {"success": True, **result}
+    except Exception as e:
+        logger.log_error(f"Failed to generate policy files: {str(e)}")
+        return {"success": False, "error": str(e)}
 
 # Update Process Endpoints
 @app.post("/api/update/process")
@@ -872,7 +934,10 @@ async def reset_to_default():
         result = backup_mgr.reset_to_default()
         
         if result['success']:
+            # 同时重置自动生成器
+            auto_gen_result = await auto_gen.reset_auto_generator()
             logger.log_info("System reset to default state")
+            logger.log_info(f"Auto-generator reset: {auto_gen_result.get('success', False)}")
             return {"code": 200, "message": result['message'], "data": result}
         else:
             return {"code": 500, "message": result['message'], "data": None}
@@ -945,6 +1010,12 @@ async def reset_system_frontend():
     """Frontend compatible system reset"""
     try:
         result = backup_mgr.reset_to_default()
+        
+        if result['success']:
+            # 同时重置自动生成器
+            auto_gen_result = await auto_gen.reset_auto_generator()
+            logger.log_info(f"Auto-generator reset: {auto_gen_result.get('success', False)}")
+        
         return {"code": 200 if result['success'] else 500, "message": result['message'], "data": result}
         
     except Exception as e:

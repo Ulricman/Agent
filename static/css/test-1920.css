@@ -163,7 +163,53 @@ div{
     box-sizing: border-box;
     background: #0f1c3c;
     min-height: calc(100vh - 60px);
+    transition: margin-left 0.3s ease;
 }
+
+/* 当sidebar打开时，为container-content添加左边距 */
+body.sidebar-open .container-content {
+    margin-left: 250px;
+}
+
+/* 为主页面元素添加动画效果 */
+.count-base, .count-resource, .count-share {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.count-base:hover, .count-resource:hover, .count-share:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* 为数据标签添加动画效果 */
+.data-label li {
+    transition: all 0.3s ease;
+}
+
+.data-label li:hover {
+    transform: scale(1.1);
+}
+
+/* 为菜单按钮添加脉冲效果 */
+.menu-btn {
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(27, 180, 249, 0.5);
+}
+
+/* 优化搜索容器样式，确保不被sidebar覆盖 */
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
 .count-base,.count-resource,.count-share,.count-topic{
     position:relative;
     padding:20px;
@@ -233,7 +279,6 @@ div{
 
 
 
-@charset "utf-8";
 /* author lyc */
 
 *{ margin:0px; padding:0px; font-family:'微软雅黑'; -webkit-tap-highlight-color:rgba(0,0,0,0);  }

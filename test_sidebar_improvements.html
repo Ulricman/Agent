@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar功能改进测试</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: '微软雅黑', sans-serif;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #28a745;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .improvement-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .highlight-box {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .instruction-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .instruction-list li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1><i class="fas fa-sidebar"></i> Sidebar功能改进验证</h1>
+        <p class="lead">测试sidebar收缩功能和页面布局优化</p>
+    </div>
+    
+    <div class="container">
+        <!-- 主要改进 -->
+        <div class="feature-card">
+            <div class="improvement-badge">✨ 核心改进</div>
+            <h3><i class="fas fa-magic"></i> Sidebar收缩功能</h3>
+            <p>为所有使用base.html的页面添加了统一的sidebar收缩功能：</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🎯 主要特性</h5>
+                    <ul>
+                        <li><strong>右侧切换按钮：</strong>位于页面右侧中间的圆形按钮</li>
+                        <li><strong>动态图标：</strong>< 和 > 图标根据状态切换</li>
+                        <li><strong>平滑动画：</strong>0.3s 过渡动画效果</li>
+                                                 <li><strong>局部遮罩：</strong>收缩时右侧按钮附近显示局部遮罩</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📱 兼容性</h5>
+                    <ul>
+                        <li><strong>所有页面：</strong>使用base.html的页面统一支持</li>
+                        <li><strong>布局自适应：</strong>内容区域自动调整边距</li>
+                        <li><strong>响应式设计：</strong>适配不同屏幕尺寸</li>
+                        <li><strong>无冲突：</strong>不影响原有功能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 技术实现 -->
+        <div class="feature-card">
+            <div class="improvement-badge">🔧 技术实现</div>
+            <h3><i class="fas fa-code"></i> 实现细节</h3>
+            
+            <h5>1. 切换按钮样式</h5>
+            <div class="code-example">
+.sidebar-toggle-btn {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1001;
+}
+            </div>
+            
+            <h5>2. Sidebar收缩动画</h5>
+            <div class="code-example">
+body.sidebar-collapsed .sidebar {
+    transform: translateX(-250px);
+}
+
+body.sidebar-collapsed .content {
+    margin-left: 0;
+}
+            </div>
+            
+            <h5>3. JavaScript控制逻辑</h5>
+            <div class="code-example">
+function toggleSidebar() {
+    const body = document.body;
+    if (body.classList.contains('sidebar-collapsed')) {
+        body.classList.remove('sidebar-collapsed');
+        toggleIcon.className = 'fas fa-chevron-left';
+    } else {
+        body.classList.add('sidebar-collapsed');
+        toggleIcon.className = 'fas fa-chevron-right';
+    }
+}
+            </div>
+        </div>
+        
+        <!-- 页面适配 -->
+        <div class="feature-card">
+            <div class="improvement-badge">📄 页面适配</div>
+            <h3><i class="fas fa-layout"></i> 页面布局优化</h3>
+            <p>为避免右侧切换按钮遮挡内容，对各页面容器进行了调整：</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>已优化页面</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="fas fa-search text-success"></i> Service Search 搜索页面</li>
+                        <li class="list-group-item"><i class="fas fa-book text-success"></i> Policies 政策页面</li>
+                        <li class="list-group-item"><i class="fas fa-question-circle text-success"></i> QA 问答页面</li>
+                        <li class="list-group-item"><i class="fas fa-glossary text-success"></i> Terms 词库页面</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>优化内容</h5>
+                    <ul class="instruction-list">
+                        <li>✅ 为容器右侧添加80px padding</li>
+                        <li>✅ 确保切换按钮不遮挡内容</li>
+                        <li>✅ 保持原有布局结构</li>
+                        <li>✅ 响应式设计兼容</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 用户体验 -->
+        <div class="feature-card">
+            <div class="improvement-badge">🎨 用户体验</div>
+            <h3><i class="fas fa-heart"></i> 交互体验提升</h3>
+            
+            <div class="highlight-box">
+                <h5><i class="fas fa-mouse-pointer"></i> 交互反馈</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>悬停效果：</strong>按钮悬停时放大1.1倍</li>
+                            <li><strong>图标旋转：</strong>切换时图标平滑旋转180度</li>
+                            <li><strong>阴影效果：</strong>按钮具有渐变阴影</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>局部遮罩：</strong>右侧切换按钮附近显示局部遮罩</li>
+                            <li><strong>关闭按钮：</strong>sidebar内部也有关闭按钮</li>
+                            <li><strong>状态记忆：</strong>切换状态清晰可见</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 测试指南 -->
+        <div class="feature-card">
+            <div class="improvement-badge">🧪 测试指南</div>
+            <h3><i class="fas fa-vial"></i> 功能测试</h3>
+            
+            <div class="instruction-list">
+                <h5>测试步骤：</h5>
+                <ol>
+                    <li><strong>查看切换按钮：</strong>右侧中间应该有一个绿色圆形按钮</li>
+                    <li><strong>点击切换：</strong>点击按钮，观察sidebar是否平滑收缩</li>
+                    <li><strong>图标变化：</strong>确认 < 和 > 图标正确切换</li>
+                    <li><strong>局部遮罩：</strong>收缩时右侧按钮附近应该出现局部遮罩</li>
+                    <li><strong>内容布局：</strong>确认内容不被按钮遮挡</li>
+                    <li><strong>点击遮罩：</strong>点击局部遮罩区域应该能收起sidebar</li>
+                </ol>
+            </div>
+            
+            <h5>测试页面链接：</h5>
+            <div class="text-center">
+                <a href="/service/search" class="demo-button">
+                    <i class="fas fa-search"></i> 搜索页面
+                </a>
+                <a href="/data/policies" class="demo-button">
+                    <i class="fas fa-book"></i> 政策页面
+                </a>
+                <a href="/data/qa" class="demo-button">
+                    <i class="fas fa-question-circle"></i> 问答页面
+                </a>
+                <a href="/data/terms" class="demo-button">
+                    <i class="fas fa-glossary"></i> 词库页面
+                </a>
+            </div>
+        </div>
+        
+        <!-- 兼容性说明 -->
+        <div class="feature-card">
+            <div class="improvement-badge">⚙️ 兼容性</div>
+            <h3><i class="fas fa-cogs"></i> 系统兼容性</h3>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>✅ 兼容特性</h5>
+                    <ul>
+                        <li>不影响原有home页面的sidebar功能</li>
+                        <li>与现有CSS样式无冲突</li>
+                        <li>支持所有现代浏览器</li>
+                        <li>响应式设计友好</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🔄 向后兼容</h5>
+                    <ul>
+                        <li>保持原有页面结构</li>
+                        <li>不破坏现有功能</li>
+                        <li>可单独禁用切换功能</li>
+                        <li>CSS降级支持</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 总结 -->
+        <div class="feature-card">
+            <div class="improvement-badge">📝 总结</div>
+            <h3><i class="fas fa-check-circle"></i> 改进总结</h3>
+            
+            <div class="highlight-box">
+                <h4>🎯 解决的问题</h4>
+                <ul>
+                    <li>✅ 修复了sidebar覆盖搜索容器的重叠问题</li>
+                    <li>✅ 为所有页面统一添加了sidebar收缩功能</li>
+                    <li>✅ 提供了直观的 < 和 > 切换按钮</li>
+                    <li>✅ 优化了页面布局，避免内容被遮挡</li>
+                    <li>✅ 增强了用户交互体验</li>
+                    <li>✅ 优化遮罩层范围，减少对页面内容的干扰</li>
+                </ul>
+                
+                <h4>🚀 技术特点</h4>
+                <ul>
+                    <li>📱 响应式设计，适配多种屏幕尺寸</li>
+                    <li>🎨 平滑动画过渡，提升视觉体验</li>
+                    <li>⚡ 高性能实现，不影响页面加载速度</li>
+                    <li>🔧 模块化设计，易于维护和扩展</li>
+                    <li>🔒 向后兼容，不破坏现有功能</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>爬虫测试</title>
+</head>
+<body>
+    <h1>爬虫检查功能测试</h1>
+    <button onclick="testCrawlerCheck()">测试爬虫检查</button>
+    <button onclick="testCrawlerStatus()">测试爬虫状态</button>
+    <div id="result" style="margin-top: 20px; padding: 20px; border: 1px solid #ccc;"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+
+        async function testCrawlerCheck() {
+            try {
+                document.getElementById('result').innerHTML = '检查中...';
+                
+                const response = await fetch(`${API_BASE}/crawler/check-updates`, { method: 'POST' });
+                const result = await response.json();
+                
+                let html = '<h3>爬虫检查结果</h3>';
+                if (result.success) {
+                    html += `
+                        <p><strong>检查时间:</strong> ${result.check_time ? new Date(result.check_time).toLocaleString() : '未知'}</p>
+                        <p><strong>检查文件数:</strong> ${result.files_checked || 0}</p>
+                        <p><strong>发现变更:</strong> ${result.has_updates ? '是' : '否'}</p>
+                        <p><strong>变更数量:</strong> ${result.changes_found || 0}</p>
+                    `;
+                    if (result.updates && result.updates.length > 0) {
+                        html += '<h4>发现的更新:</h4><ul>';
+                        result.updates.forEach(update => {
+                            html += `<li>${update.description || update.type || '未知更新'}</li>`;
+                        });
+                        html += '</ul>';
+                    }
+                } else {
+                    html += `<p style="color: red;">检查失败: ${result.error || '未知错误'}</p>`;
+                }
+                
+                document.getElementById('result').innerHTML = html;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+
+        async function testCrawlerStatus() {
+            try {
+                document.getElementById('result').innerHTML = '获取状态中...';
+                
+                const response = await fetch(`${API_BASE}/crawler/status`);
+                const result = await response.json();
+                
+                let html = '<h3>爬虫状态</h3>';
+                if (result.success) {
+                    const status = result.status;
+                    html += `
+                        <p><strong>当前状态:</strong> ${status.status || '未知'}</p>
+                        <p><strong>总检查次数:</strong> ${status.total_checks || 0}</p>
+                        <p><strong>发现更新次数:</strong> ${status.updates_found || 0}</p>
+                        <p><strong>错误次数:</strong> ${status.errors || 0}</p>
+                        <p><strong>最后检查时间:</strong> ${status.last_check ? new Date(status.last_check).toLocaleString() : '未知'}</p>
+                        <p><strong>成功率:</strong> ${Math.round(status.success_rate || 0)}%</p>
+                    `;
+                } else {
+                    html += `<p style="color: red;">获取状态失败: ${result.error || '未知错误'}</p>`;
+                }
+                
+                document.getElementById('result').innerHTML = html;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html> 

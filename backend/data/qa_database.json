@@ -1,25 +1,5 @@
 [
   {
-    "id": "qa_001",
-    "question": "增值税一般纳税人的认定标准是什么？",
-    "answer": "增值税一般纳税人的认定标准主要有：1）年应征增值税销售额超过500万元；2）年应税销售额未超过标准但会计核算健全，能够提供准确税务资料的纳税人也可申请认定。",
-    "category": "增值税",
-    "keywords": [
-      "增值税",
-      "一般纳税人",
-      "认定标准"
-    ],
-    "confidence": 0.95,
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
-    "source": "增值税暂行条例",
-    "related_questions": [
-      "qa_002"
-    ],
-    "priority": "high",
-    "status": "active"
-  },
-  {
     "id": "qa_002",
     "question": "小规模纳税人和一般纳税人有什么区别？",
     "answer": "主要区别包括：1）认定标准不同：一般纳税人年销售额超过500万元，小规模纳税人不超过500万元；2）税率不同：一般纳税人适用13%、9%等税率，小规模纳税人征收率为3%；3）进项税抵扣：一般纳税人可以抵扣进项税，小规模纳税人不能抵扣。",
@@ -31,8 +11,8 @@
       "税率"
     ],
     "confidence": 0.92,
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "增值税暂行条例",
     "related_questions": [
       "qa_001"
@@ -52,8 +32,8 @@
       "高新技术企业"
     ],
     "confidence": 0.98,
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "企业所得税法",
     "related_questions": [],
     "priority": "high",
@@ -71,8 +51,8 @@
       "专项附加扣除"
     ],
     "confidence": 0.96,
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "个人所得税法",
     "related_questions": [],
     "priority": "high",
@@ -90,11 +70,161 @@
       "网上办税"
     ],
     "confidence": 0.89,
-    "created_at": "2025-06-05T15:18:58.864160",
-    "updated_at": "2025-06-05T15:18:58.864160",
+    "created_at": "2025-06-05T18:43:01.725095",
+    "updated_at": "2025-06-05T18:43:01.725095",
     "source": "税务登记管理办法",
     "related_questions": [],
     "priority": "medium",
     "status": "active"
+  },
+  {
+    "id": "qa_auto_0b5326cb",
+    "question": "新的税务管理政策什么时候开始执行？",
+    "answer": "税务管理制度的更新要求纳税人完善内部管理流程，加强税务合规性管理。企业应建立健全税务管理制度，防范税务风险。\n\n更新详情：检测到税务政策变更，需要更新知识库",
+    "category": "税务管理",
+    "keywords": [
+      "税务管理",
+      "policy_change",
+      "政策更新"
+    ],
+    "confidence": 0.92,
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_questions": [],
+    "priority": "medium",
+    "status": "active",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "policy_change",
+      "description": "检测到税务政策变更，需要更新知识库",
+      "priority": "medium",
+      "category": "增值税",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "28dacb014f32bbf22fcfb739dad7dd90",
+    "created_at": "2025-06-05T18:52:54.432322",
+    "updated_at": "2025-06-05T18:52:54.432322"
+  },
+  {
+    "id": "qa_auto_f2dc0a84",
+    "question": "个人所得税政策变更的主要内容是什么？",
+    "answer": "个人所得税政策变化可能影响个人纳税负担，纳税人应了解新的计税方法、扣除标准等。建议关注税务部门的官方解读和操作指南。\n\n更新详情：检测到税务政策变更，需要更新知识库",
+    "category": "个人所得税",
+    "keywords": [
+      "个人所得税",
+      "policy_change",
+      "政策更新"
+    ],
+    "confidence": 0.8,
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_questions": [],
+    "priority": "medium",
+    "status": "active",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "policy_change",
+      "description": "检测到税务政策变更，需要更新知识库",
+      "priority": "medium",
+      "category": "增值税",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "28dacb014f32bbf22fcfb739dad7dd90",
+    "created_at": "2025-06-05T18:52:54.433324",
+    "updated_at": "2025-06-05T18:52:54.433324"
+  },
+  {
+    "id": "qa_auto_dc38b448",
+    "question": "税务管理相关问题：享受优惠政策需要满足什么条件？",
+    "answer": "税务管理制度的更新要求纳税人完善内部管理流程，加强税务合规性管理。企业应建立健全税务管理制度，防范税务风险。\n\n更新详情：新优惠政策发布，需要添加减免政策内容",
+    "category": "税务管理",
+    "keywords": [
+      "税务管理",
+      "preferential_policy",
+      "政策更新"
+    ],
+    "confidence": 0.93,
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_questions": [],
+    "priority": "low",
+    "status": "active",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "preferential_policy",
+      "description": "新优惠政策发布，需要添加减免政策内容",
+      "priority": "low",
+      "category": "小微企业",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "4cf85154be5a08bee1d56aa7b7dff810",
+    "created_at": "2025-06-05T18:52:54.434323",
+    "updated_at": "2025-06-05T18:52:54.434323"
+  },
+  {
+    "id": "qa_auto_a80b310e",
+    "question": "税务管理相关问题：优惠政策的有效期是多长？",
+    "answer": "税务管理制度的更新要求纳税人完善内部管理流程，加强税务合规性管理。企业应建立健全税务管理制度，防范税务风险。\n\n更新详情：新优惠政策发布，需要添加减免政策内容",
+    "category": "税务管理",
+    "keywords": [
+      "税务管理",
+      "preferential_policy",
+      "政策更新"
+    ],
+    "confidence": 0.82,
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_questions": [],
+    "priority": "low",
+    "status": "active",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "preferential_policy",
+      "description": "新优惠政策发布，需要添加减免政策内容",
+      "priority": "low",
+      "category": "小微企业",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "4cf85154be5a08bee1d56aa7b7dff810",
+    "created_at": "2025-06-05T18:52:54.435325",
+    "updated_at": "2025-06-05T18:52:54.435325"
+  },
+  {
+    "id": "qa_auto_d3be1da8",
+    "question": "个人所得税相关问题：享受优惠政策需要满足什么条件？",
+    "answer": "个人所得税政策变化可能影响个人纳税负担，纳税人应了解新的计税方法、扣除标准等。建议关注税务部门的官方解读和操作指南。\n\n更新详情：新优惠政策发布，需要添加减免政策内容",
+    "category": "个人所得税",
+    "keywords": [
+      "个人所得税",
+      "preferential_policy",
+      "政策更新"
+    ],
+    "confidence": 0.9,
+    "source": "自动生成-2025-06-05T18:52:49.683352",
+    "related_questions": [],
+    "priority": "low",
+    "status": "active",
+    "auto_generated": true,
+    "source_update": {
+      "type": "simulated_update",
+      "update_type": "preferential_policy",
+      "description": "新优惠政策发布，需要添加减免政策内容",
+      "priority": "low",
+      "category": "小微企业",
+      "timestamp": "2025-06-05T18:52:49.683352",
+      "simulated": true,
+      "is_fixed_process": true
+    },
+    "update_hash": "4cf85154be5a08bee1d56aa7b7dff810",
+    "created_at": "2025-06-05T18:52:54.436324",
+    "updated_at": "2025-06-05T18:52:54.436324"
   }
 ]

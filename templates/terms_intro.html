@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    /* 响应式布局调整 */
+    .terms-container {
+        transition: all 0.3s ease;
+    }
+    
+    /* Sidebar收缩时的布局适应 */
+    body.sidebar-collapsed .terms-container {
+        margin-left: 20px !important;
+        max-width: calc(100% - 120px) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .terms-container {
+            margin-left: 20px !important;
+            max-width: calc(100% - 40px) !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 terms-container" style="padding: 20px 80px 20px 40px; margin-left: 280px; max-width: calc(100% - 320px);">  <!-- 增加与侧栏的间距 -->
+    <div class="jumbotron bg-success text-white text-center">
+        <h1><i class="fas fa-book-open"></i> 专业词库</h1>
+        <p class="lead">税务专业术语智能查询系统</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3><i class="fas fa-info-circle text-success"></i> 功能简介</h3>
+                    <p class="lead">
+                        专业词库是 KnowTax 智知税典的重要组成部分，收录了全面的税务专业术语及其权威释义。
+                        为税务工作者、会计人员和相关从业者提供准确、权威的专业术语查询服务。
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-search"></i> 智能检索</h5>
+                            <p>支持拼音、首字母、关键词等多种方式查询专业术语</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-tags"></i> 分类管理</h5>
+                            <p>按税种、行业、法规等维度科学分类，便于系统学习</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">5,678</h3>
+                    <p>词条总数</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-info">15</h3>
+                    <p>专业领域</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-warning">432</h3>
+                    <p>本月查询</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">99%</h3>
+                    <p>覆盖率</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4><i class="fas fa-search"></i> 词条检索演示</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="termSearchInput" placeholder="请输入要查询的专业术语..." value="增值税">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" onclick="performTermSearch()">
+                            <i class="fas fa-search"></i> 查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="termResults" style="display: none;">
+                <!-- 查询结果 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4><i class="fas fa-list"></i> 词条示例</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">增值税</h5>
+                            <small>Value Added Tax (VAT)</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>定义：</strong>以商品（含应税劳务）在流转过程中产生的增值额作为计税依据而征收的一种流转税。</p>
+                            <p><strong>特点：</strong>中性税收、避免重复征税、税负透明</p>
+                            <p><strong>适用范围：</strong>销售货物、提供劳务、进口货物等</p>
+                            <small class="text-muted">分类：流转税 | 查看：2,345次</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">企业所得税</h5>
+                            <small>Corporate Income Tax</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>定义：</strong>对我国境内的企业和其他取得收入的组织的生产经营所得和其他所得征收的一种所得税。</p>
+                            <p><strong>税率：</strong>基本税率25%，小微企业20%，高新技术企业15%</p>
+                            <p><strong>纳税人：</strong>企业法人、非法人企业</p>
+                            <small class="text-muted">分类：所得税 | 查看：1,987次</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">小规模纳税人</h5>
+                            <small>Small-scale Taxpayer</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>定义：</strong>年应征增值税销售额不超过规定标准，会计核算不健全的增值税纳税人。</p>
+                            <p><strong>标准：</strong>年销售额不超过500万元</p>
+                            <p><strong>征收率：</strong>3%或1%</p>
+                            <small class="text-muted">分类：纳税人类型 | 查看：1,654次</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0">进项税额</h5>
+                            <small>Input Tax</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>定义：</strong>纳税人购进货物、劳务、服务、无形资产或者不动产，支付或者负担的增值税额。</p>
+                            <p><strong>抵扣条件：</strong>取得合法有效凭证，用于应税项目</p>
+                            <p><strong>抵扣时间：</strong>认证后申报期内抵扣</p>
+                            <small class="text-muted">分类：增值税概念 | 查看：1,432次</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4><i class="fas fa-sitemap"></i> 词条分类</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-exchange-alt text-success"></i> 流转税类</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">增值税 (156条)</li>
+                        <li class="list-group-item">消费税 (89条)</li>
+                        <li class="list-group-item">关税 (67条)</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5><i class="fas fa-chart-line text-primary"></i> 所得税类</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">企业所得税 (234条)</li>
+                        <li class="list-group-item">个人所得税 (198条)</li>
+                        <li class="list-group-item">税收优惠 (145条)</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5><i class="fas fa-building text-info"></i> 财产税类</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">房产税 (78条)</li>
+                        <li class="list-group-item">土地使用税 (56条)</li>
+                        <li class="list-group-item">车船税 (34条)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info mt-4">
+        <h5><i class="fas fa-lightbulb"></i> 使用提示</h5>
+        <p>专业词库支持多种查询方式：</p>
+        <ul>
+            <li><strong>精确查询：</strong>输入完整词条名称获得准确定义</li>
+            <li><strong>模糊查询：</strong>输入关键字查找相关术语</li>
+            <li><strong>分类浏览：</strong>按税种或领域系统学习</li>
+            <li><strong>拼音查询：</strong>支持拼音首字母快速定位</li>
+        </ul>
+    </div>
+    
+    <div class="alert alert-warning mt-4">
+        <h5><i class="fas fa-exclamation-triangle"></i> 重要提示</h5>
+        <p>上述词条示例仅为展示格式，具体定义和解释请以最新税法规定为准。如需查看完整的专业词库内容和进行详细管理操作，请访问后端管理系统。</p>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('integration.dashboard') }}" class="btn btn-success btn-lg">
+            <i class="fas fa-tachometer-alt"></i> 集成管理界面
+        </a>
+        <a href="http://localhost:8000/knowledge" target="_blank" class="btn btn-secondary btn-lg">
+            <i class="fas fa-external-link-alt"></i> 直接访问后端
+        </a>
+        <a href="http://localhost:8000/docs#/Knowledge%20Management" target="_blank" class="btn btn-outline-success btn-lg">
+            <i class="fas fa-book-open"></i> API文档
+        </a>
+    </div>
+</div>
+
+<script>
+const mockTermsData = [
+    {
+        term: "增值税",
+        english: "Value Added Tax (VAT)",
+        definition: "以商品（含应税劳务）在流转过程中产生的增值额作为计税依据而征收的一种流转税。",
+        category: "流转税",
+        features: "中性税收、避免重复征税、税负透明",
+        scope: "销售货物、提供劳务、进口货物等"
+    },
+    {
+        term: "增值税税率",
+        english: "VAT Rate",
+        definition: "增值税的征收比率，我国目前实行多档税率制。",
+        category: "增值税",
+        features: "13%、9%、6%三档基本税率",
+        scope: "不同商品和服务适用不同税率"
+    },
+    {
+        term: "增值税专用发票",
+        english: "VAT Special Invoice",
+        definition: "增值税一般纳税人销售货物或者提供应税劳务开具的发票。",
+        category: "发票管理",
+        features: "可作为进项税额抵扣凭证",
+        scope: "一般纳税人之间的交易"
+    }
+];
+
+function performTermSearch() {
+    const query = document.getElementById('termSearchInput').value.trim();
+    const resultsDiv = document.getElementById('termResults');
+    
+    if (!query) {
+        alert('请输入要查询的术语');
+        return;
+    }
+    
+    // 模拟搜索结果
+    const results = mockTermsData.filter(item => 
+        item.term.includes(query) || 
+        item.definition.includes(query) ||
+        item.category.includes(query)
+    );
+    
+    let html = '<div class="mt-3"><h5>查询结果 (' + results.length + ' 条)：</h5>';
+    
+    if (results.length > 0) {
+        results.forEach(item => {
+            html += '<div class="card mb-3">';
+            html += '<div class="card-header bg-success text-white">';
+            html += '<h6 class="mb-0">' + item.term + '</h6>';
+            html += '<small>' + item.english + '</small>';
+            html += '</div>';
+            html += '<div class="card-body">';
+            html += '<p><strong>定义：</strong>' + item.definition + '</p>';
+            if (item.features) {
+                html += '<p><strong>特点：</strong>' + item.features + '</p>';
+            }
+            if (item.scope) {
+                html += '<p><strong>适用范围：</strong>' + item.scope + '</p>';
+            }
+            html += '<small class="text-muted">分类：' + item.category + '</small>';
+            html += '</div>';
+            html += '</div>';
+        });
+    } else {
+        html += '<div class="alert alert-info">未找到包含 "' + query + '" 的词条，请尝试其他关键词。</div>';
+    }
+    
+    html += '</div>';
+    resultsDiv.innerHTML = html;
+    resultsDiv.style.display = 'block';
+}
+
+document.getElementById('termSearchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performTermSearch();
+    }
+});
+
+// 添加页面动画效果
+document.addEventListener('DOMContentLoaded', function() {
+    // 为统计数字添加动画效果
+    const statNumbers = document.querySelectorAll('.card h3');
+    statNumbers.forEach(stat => {
+        if (stat.textContent.match(/^\d+/)) {
+            const finalText = stat.textContent;
+            const finalValue = parseInt(finalText);
+            if (!isNaN(finalValue)) {
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 40);
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
+                        clearInterval(timer);
+                        stat.textContent = finalText;
+                    } else {
+                        stat.textContent = currentValue.toLocaleString();
+                    }
+                }, 60);
+            }
+        }
+    });
+    
+    // 为卡片添加悬停效果和进入动画
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        // 入场动画
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+        
+        // 悬停效果
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+            this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+            this.style.boxShadow = '0 12px 30px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+        });
+    });
+    
+    // 为列表项添加悬停效果
+    const listItems = document.querySelectorAll('.list-group-item');
+    listItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+            this.style.transition = 'transform 0.3s ease';
+            this.style.backgroundColor = '#f8f9fa';
+            this.style.cursor = 'pointer';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+            this.style.backgroundColor = 'transparent';
+        });
+    });
+    
+    // 为按钮添加波浪效果
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px)';
+            this.style.transition = 'transform 0.3s ease';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // 为搜索结果添加淡入效果
+    const performTermSearchOriginal = performTermSearch;
+    performTermSearch = function() {
+        performTermSearchOriginal();
+        const resultsDiv = document.getElementById('termResults');
+        if (resultsDiv.style.display !== 'none') {
+            resultsDiv.style.opacity = '0';
+            resultsDiv.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                resultsDiv.style.opacity = '1';
+                resultsDiv.style.transform = 'translateY(0)';
+                resultsDiv.style.transition = 'all 0.4s ease';
+            }, 100);
+        }
+    };
+});
+</script>
+{% endblock %} 

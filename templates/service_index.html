@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    .service-dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .service-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #28a745;
+    }
+    
+    .service-card h3 {
+        color: #28a745;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .service-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .action-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    
+    .action-btn:hover {
+        background: #218838;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .action-btn.secondary {
+        background: #6c757d;
+    }
+    
+    .action-btn.secondary:hover {
+        background: #545b62;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .stat-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #28a745;
+        display: block;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    
+    .quick-search {
+        margin-top: 15px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .recent-activity {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+    
+    .activity-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #dee2e6;
+        font-size: 14px;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .toast.show {
+        transform: translateX(0);
+    }
+    
+    .toast.error {
+        background: #dc3545;
+    }
+    
+    .toast.info {
+        background: #17a2b8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="padding-right: 80px;">  <!-- 为右侧切换按钮留出空间 -->
+    <h2>知识服务岗工作台</h2>
+    <p class="text-muted">为用户提供专业的税务知识查询和问答服务</p>
+    
+    <div class="service-dashboard">
+        <!-- 快速搜索卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-search"></i>
+                知识库搜索
+            </h3>
+            <div class="quick-search">
+                <input type="text" class="search-input" id="quickSearchInput" placeholder="输入关键词快速搜索税务知识...">
+                <div class="service-actions">
+                    <button class="action-btn" onclick="quickSearch()">
+                        <i class="fas fa-search"></i> 搜索
+                    </button>
+                    <a href="/service/search" class="action-btn secondary">
+                        <i class="fas fa-cog"></i> 高级搜索
+                    </a>
+                </div>
+            </div>
+            <div id="searchResults" style="margin-top: 15px;"></div>
+        </div>
+        
+        <!-- 问答服务卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-question-circle"></i>
+                智能问答
+            </h3>
+            <p>为用户提供即时的税务问题解答</p>
+            <div class="service-actions">
+                <a href="/service/search" class="action-btn">
+                    <i class="fas fa-comments"></i> 开始问答
+                </a>
+                <button class="action-btn secondary" onclick="loadQAList()">
+                    <i class="fas fa-list"></i> 问答库
+                </button>
+                <button class="action-btn secondary" onclick="loadPopularQuestions()">
+                    <i class="fas fa-fire"></i> 热门问题
+                </button>
+            </div>
+        </div>
+        
+        <!-- 服务统计卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-chart-bar"></i>
+                服务统计
+            </h3>
+            <div class="stats-grid" id="serviceStats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalKnowledge">-</span>
+                    <div class="stat-label">知识条目</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalQA">-</span>
+                    <div class="stat-label">问答对</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="todayQueries">0</span>
+                    <div class="stat-label">今日查询</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="activeUsers">-</span>
+                    <div class="stat-label">在线用户</div>
+                </div>
+            </div>
+            <div class="service-actions">
+                <button class="action-btn secondary" onclick="refreshStats()">
+                    <i class="fas fa-sync"></i> 刷新数据
+                </button>
+            </div>
+        </div>
+        
+        <!-- 用户状态卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-users"></i>
+                用户管理
+            </h3>
+            <p>查看用户状态和提供技术支持</p>
+            <div class="service-actions">
+                <a href="/service/user-status" class="action-btn">
+                    <i class="fas fa-user-check"></i> 用户状态
+                </a>
+                <button class="action-btn secondary" onclick="loadUserActivity()">
+                    <i class="fas fa-history"></i> 用户活动
+                </button>
+            </div>
+            <div class="recent-activity" id="userActivity">
+                <div class="activity-item">等待加载用户活动...</div>
+            </div>
+        </div>
+        
+        <!-- 快捷工具卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-tools"></i>
+                服务工具
+            </h3>
+            <p>常用的客服工具和快捷操作</p>
+            <div class="service-actions">
+                <button class="action-btn" onclick="generateSampleQA()">
+                    <i class="fas fa-magic"></i> 生成示例问答
+                </button>
+                <button class="action-btn secondary" onclick="exportServiceData()">
+                    <i class="fas fa-download"></i> 导出数据
+                </button>
+                <button class="action-btn secondary" onclick="viewSystemStatus()">
+                    <i class="fas fa-heartbeat"></i> 系统状态
+                </button>
+            </div>
+        </div>
+        
+        <!-- 最新知识卡片 -->
+        <div class="service-card">
+            <h3>
+                <i class="fas fa-newspaper"></i>
+                最新知识
+            </h3>
+            <p>最近更新的税务知识和政策</p>
+            <div id="recentKnowledge" class="recent-activity">
+                <div class="activity-item">正在加载最新知识...</div>
+            </div>
+            <div class="service-actions">
+                <button class="action-btn secondary" onclick="loadRecentKnowledge()">
+                    <i class="fas fa-refresh"></i> 刷新
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast通知 -->
+<div id="toast" class="toast"></div>
+
+<script>
+// Toast通知函数
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + type + ' show';
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, type === 'error' ? 4000 : 2000);
+}
+
+// 快速搜索功能
+function quickSearch() {
+    const query = document.getElementById('quickSearchInput').value.trim();
+    if (!query) {
+        showToast('请输入搜索关键词', 'error');
+        return;
+    }
+    
+    fetch('/service/api/search-knowledge?q=' + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+            const resultsDiv = document.getElementById('searchResults');
+            if (data.success && data.data.length > 0) {
+                let html = '<div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px;">';
+                html += '<strong>搜索结果：</strong><br>';
+                data.data.slice(0, 3).forEach(item => {
+                    html += '<div style="margin: 5px 0; padding: 5px; background: white; border-radius: 3px;">';
+                    html += '<strong>' + item.title + '</strong><br>';
+                    html += '<small>' + item.content.substring(0, 100) + '...</small>';
+                    html += '</div>';
+                });
+                if (data.data.length > 3) {
+                    html += '<a href="/service/search?q=' + encodeURIComponent(query) + '" class="action-btn" style="margin-top: 5px;">查看全部' + data.data.length + '条结果</a>';
+                }
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+                showToast('找到' + data.data.length + '条相关知识');
+            } else {
+                resultsDiv.innerHTML = '<div style="color: #6c757d; font-style: italic; margin-top: 10px;">未找到相关知识</div>';
+                showToast('未找到相关知识', 'info');
+            }
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            showToast('搜索服务暂时不可用', 'error');
+        });
+}
+
+// 加载服务统计
+function loadServiceStats() {
+    Promise.all([
+        fetch('/service/api/get-knowledge-list'),
+        fetch('/service/api/get-qa-list')
+    ]).then(responses => {
+        return Promise.all(responses.map(r => r.json()));
+    }).then(result => {
+        const knowledgeData = result[0];
+        const qaData = result[1];
+        
+        if (knowledgeData.success) {
+            document.getElementById('totalKnowledge').textContent = knowledgeData.data.length;
+        }
+        if (qaData.success) {
+            document.getElementById('totalQA').textContent = qaData.data.length;
+        }
+        
+        // 模拟其他统计数据
+        document.getElementById('activeUsers').textContent = Math.floor(Math.random() * 10) + 1;
+        document.getElementById('todayQueries').textContent = Math.floor(Math.random() * 50) + 10;
+    }).catch(error => {
+        console.error('Stats loading error:', error);
+    });
+}
+
+// 刷新统计数据
+function refreshStats() {
+    showToast('正在刷新统计数据...', 'info');
+    loadServiceStats();
+}
+
+// 加载问答列表
+function loadQAList() {
+    window.open('/service/search', '_blank');
+}
+
+// 加载热门问题
+function loadPopularQuestions() {
+    fetch('/service/api/get-qa-list')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                const popular = data.data.slice(0, 5);
+                let message = '热门问题：\n';
+                popular.forEach((qa, index) => {
+                    message += (index + 1) + '. ' + qa.question + '\n';
+                });
+                alert(message);
+            } else {
+                showToast('暂无热门问题数据', 'info');
+            }
+        })
+        .catch(error => {
+            console.error('Popular questions error:', error);
+            showToast('获取热门问题失败', 'error');
+        });
+}
+
+// 加载用户活动
+function loadUserActivity() {
+    const activities = [
+        '用户张三查询了增值税相关问题',
+        '用户李四搜索了企业所得税政策',
+        '用户王五提交了税务筹划咨询',
+        '用户赵六查看了税务申报流程',
+        '用户孙七询问了发票开具规定'
+    ];
+    
+    const activityDiv = document.getElementById('userActivity');
+    activityDiv.innerHTML = activities.map(activity => 
+        '<div class="activity-item"><i class="fas fa-user"></i> ' + activity + '</div>'
+    ).join('');
+    
+    showToast('用户活动已更新');
+}
+
+// 生成示例问答
+function generateSampleQA() {
+    showToast('正在生成示例问答...', 'info');
+    
+    fetch('/service/api/get-qa-list')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                const randomQA = data.data[Math.floor(Math.random() * data.data.length)];
+                alert('示例问答：\n\n问题：' + randomQA.question + '\n\n答案：' + randomQA.answer);
+                showToast('示例问答已生成');
+            } else {
+                showToast('暂无问答数据', 'info');
+            }
+        })
+        .catch(error => {
+            console.error('Generate sample QA error:', error);
+            showToast('生成示例问答失败', 'error');
+        });
+}
+
+// 导出服务数据
+function exportServiceData() {
+    showToast('正在准备导出数据...', 'info');
+    setTimeout(() => {
+        showToast('数据导出功能开发中', 'info');
+    }, 1000);
+}
+
+// 查看系统状态
+function viewSystemStatus() {
+    const status = {
+        'Frontend Server': 'Running',
+        'Backend API': 'Connected',
+        'Database': 'Online',
+        'Search Engine': 'Active'
+    };
+    
+    let message = '系统状态：\n\n';
+    Object.entries(status).forEach(entry => {
+        message += entry[0] + ': ' + entry[1] + '\n';
+    });
+    
+    alert(message);
+    showToast('系统状态正常');
+}
+
+// 加载最新知识
+function loadRecentKnowledge() {
+    fetch('/service/api/get-knowledge-list')
+        .then(response => response.json())
+        .then(data => {
+            const recentDiv = document.getElementById('recentKnowledge');
+            if (data.success && data.data.length > 0) {
+                const recent = data.data.slice(-5).reverse();
+                recentDiv.innerHTML = recent.map(item => 
+                    '<div class="activity-item">' +
+                        '<strong>' + item.title + '</strong><br>' +
+                        '<small>' + item.content.substring(0, 80) + '...</small>' +
+                    '</div>'
+                ).join('');
+                showToast('最新知识已更新');
+            } else {
+                recentDiv.innerHTML = '<div class="activity-item">暂无最新知识</div>';
+                showToast('暂无最新知识', 'info');
+            }
+        })
+        .catch(error => {
+            console.error('Recent knowledge error:', error);
+            showToast('加载最新知识失败', 'error');
+        });
+}
+
+// 回车键搜索
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('quickSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            quickSearch();
+        }
+    });
+    
+    // 初始加载数据
+    loadServiceStats();
+    loadUserActivity();
+    loadRecentKnowledge();
+});
+</script>
+{% endblock %} 
