@@ -1,0 +1,25 @@
+[
+  {
+    "timestamp": "2025-06-05T15:18:58.879795",
+    "operation": "initialize",
+    "details": {
+      "items_count": 5
+    }
+  },
+  {
+    "timestamp": "2025-06-05T15:34:09.637848",
+    "operation": "export_all",
+    "details": {
+      "export_path": "data/backups/qa\\qa_export_20250605_153409.json",
+      "items_count": 5
+    }
+  },
+  {
+    "timestamp": "2025-06-05T15:34:36.480820",
+    "operation": "search",
+    "details": {
+      "query": "增值税一般纳税人",
+      "results_count": 1
+    }
+  }
+]

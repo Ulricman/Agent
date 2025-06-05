@@ -1,0 +1,404 @@
+[
+  {
+    "timestamp": "2025-06-05T15:18:57.826938",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:18:58.880713",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:33:24.915434",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:33:34.402785",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:34:28.606637",
+    "level": "INFO",
+    "message": "New version released: 1.0.1",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:46:44.000753",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:48:13.969803",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:48:45.503961",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:48:46.462705",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:51:11.627995",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:51:31.590740",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:51:33.818492",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:51:44.478904",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:51:47.130240",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:52:43.499636",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:52:44.473937",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:52:58.312265",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:53:12.938824",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:53:15.233672",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T15:57:19.526089",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:11:55.413051",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:11:56.415188",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:21:02.808957",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:21:03.821696",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:31:26.606842",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:32:23.583551",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:05.820071",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:17.245500",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:19.699794",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:27.983996",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:31.969654",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:37.663509",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:46.228234",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:52.869876",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:33:59.067136",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:34:05.159665",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:34:12.213393",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:36:08.588675",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:38:15.581771",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:38:45.601087",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:40:56.533495",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:40:57.680156",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:41:09.608244",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:41:13.825334",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:41:18.130204",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:46:19.248900",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:46:21.295794",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:48:43.333984",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:48:44.317563",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:50:45.287439",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T16:50:46.241106",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:00:01.051877",
+    "level": "INFO",
+    "message": "New version released: 1.0.2",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:00:54.455473",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:00:57.004364",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:00:59.367121",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:01:06.162937",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:01:09.478368",
+    "level": "INFO",
+    "message": "Manual crawler check initiated",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:03:36.487252",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:03:50.114969",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:03:56.775678",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:04:32.311464",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:07:58.136535",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:10:18.354857",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:13:22.110052",
+    "level": "INFO",
+    "message": "Backend initialization completed successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:13:23.138020",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:13:41.632384",
+    "level": "INFO",
+    "message": "Backup created: system_backup_20250605_171341",
+    "extra_data": {}
+  },
+  {
+    "timestamp": "2025-06-05T17:13:54.305042",
+    "level": "INFO",
+    "message": "Backend server started successfully",
+    "extra_data": {}
+  }
+]
