@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统备份管理 - KnowTax智知税典</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/modern-style.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container-fluid {
+            padding: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+        }
+        
+        .stats-card {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .backup-item {
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .backup-item:hover {
+            background: rgba(248, 249, 250, 1);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(45deg, #0056b3, #003f7f);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger-gradient {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            border: none;
+            color: white;
+        }
+        
+        .btn-danger-gradient:hover {
+            background: linear-gradient(45deg, #c82333, #a71e2a);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning-gradient {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            border: none;
+            color: #212529;
+        }
+        
+        .btn-warning-gradient:hover {
+            background: linear-gradient(45deg, #e0a800, #c69500);
+            color: #212529;
+            transform: translateY(-2px);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+        }
+        
+        .page-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .warning-panel {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #212529;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .backup-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .backup-actions {
+                flex-direction: column;
+            }
+            
+            .backup-actions .btn {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="text-white mt-3">正在处理，请稍候...</div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <div class="container-fluid">
+        <h1 class="page-title">
+            <i class="fas fa-database"></i> 系统备份管理
+        </h1>
+
+        <!-- Navigation -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <a href="/" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-home"></i> 返回首页
+                        </a>
+                        <a href="/html-manager" class="btn btn-outline-info me-2">
+                            <i class="fas fa-file-code"></i> HTML管理
+                        </a>
+                        <button class="btn btn-gradient" onclick="location.reload()">
+                            <i class="fas fa-sync-alt"></i> 刷新状态
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="stats-card">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <h3 id="totalDataFiles">0</h3>
+                            <p>数据文件</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 id="totalHtmlFiles">0</h3>
+                            <p>HTML文件</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 id="totalBackups">0</h3>
+                            <p>备份数量</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 id="totalSystemSize">0 MB</h3>
+                            <p>系统总大小</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Panel -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="warning-panel">
+                    <h5><i class="fas fa-exclamation-triangle"></i> 重要提醒</h5>
+                    <ul class="mb-0">
+                        <li>备份包含所有数据文件和HTML公告文件</li>
+                        <li>恢复备份将覆盖当前所有数据，请谨慎操作</li>
+                        <li>系统重置将清空所有数据，恢复到初始状态</li>
+                        <li>重要操作前建议先创建备份</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Backup Operations -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-plus-circle"></i> 备份操作</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Create Backup -->
+                        <div class="mb-4">
+                            <h6>创建新备份</h6>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="newBackupName" 
+                                       placeholder="备份名称（可选，留空自动生成）">
+                                <button class="btn btn-gradient" type="button" onclick="createBackup()">
+                                    <i class="fas fa-save"></i> 创建备份
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- System Reset -->
+                        <div class="mb-4">
+                            <h6 class="text-danger">危险操作</h6>
+                            <p class="text-muted small">将系统重置到初始状态，所有数据将被清空并恢复默认设置</p>
+                            <button class="btn btn-danger-gradient" onclick="confirmSystemReset()">
+                                <i class="fas fa-exclamation-triangle"></i> 重置系统到默认状态
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-info-circle"></i> 系统信息</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-sm">
+                                    <tbody id="systemInfoTable">
+                                        <tr><td colspan="2" class="text-center">加载中...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup List -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-history"></i> 备份列表</h5>
+                        <button class="btn btn-outline-light btn-sm" onclick="loadBackupList()">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="backupList">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> 加载备份列表...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Confirm System Reset Modal -->
+    <div class="modal fade" id="confirmResetModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle"></i> 确认系统重置
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <strong>警告：</strong>此操作将：
+                        <ul class="mt-2">
+                            <li>删除所有现有数据文件</li>
+                            <li>删除所有HTML公告文件</li>
+                            <li>重置系统到初始默认状态</li>
+                            <li>此操作不可逆转</li>
+                        </ul>
+                    </div>
+                    <p>系统将自动创建重置前的备份。</p>
+                    <p><strong>确定要继续吗？</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" onclick="performSystemReset()">
+                        <i class="fas fa-exclamation-triangle"></i> 确认重置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Restore Modal -->
+    <div class="modal fade" id="confirmRestoreModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-history"></i> 确认恢复备份
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong>注意：</strong>此操作将：
+                        <ul class="mt-2">
+                            <li>覆盖所有当前数据</li>
+                            <li>恢复到备份时的状态</li>
+                            <li>当前未备份的数据将丢失</li>
+                        </ul>
+                    </div>
+                    <p>要恢复的备份：<strong id="restoreBackupName"></strong></p>
+                    <p>创建时间：<strong id="restoreBackupTime"></strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" onclick="performRestore()">
+                        <i class="fas fa-history"></i> 确认恢复
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedBackupName = '';
+
+        // Page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSystemStatus();
+            loadBackupList();
+        });
+
+        // Show/Hide loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Show toast message
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : (type === 'success' ? 'success' : 'info')}" 
+                     role="alert" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : (type === 'success' ? 'check-circle' : 'info-circle')}"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            const toast = new bootstrap.Toast(document.getElementById(toastId));
+            toast.show();
+            
+            // Auto remove after shown
+            document.getElementById(toastId).addEventListener('hidden.bs.toast', function() {
+                this.remove();
+            });
+        }
+
+        // Load system status
+        async function loadSystemStatus() {
+            try {
+                const response = await fetch('/api/backup/status');
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    const data = result.data;
+                    
+                    // Update statistics
+                    document.getElementById('totalDataFiles').textContent = Object.keys(data.data_files || {}).length;
+                    document.getElementById('totalHtmlFiles').textContent = data.html_files_count || 0;
+                    document.getElementById('totalBackups').textContent = data.backups_count || 0;
+                    document.getElementById('totalSystemSize').textContent = data.total_size_human || '0 B';
+                    
+                    // Update system info table
+                    const tableBody = document.getElementById('systemInfoTable');
+                    let tableHTML = '';
+                    
+                    for (const [filename, info] of Object.entries(data.data_files || {})) {
+                        const status = info.exists ? 
+                            `<span class="badge bg-success">存在</span>` : 
+                            `<span class="badge bg-danger">缺失</span>`;
+                        tableHTML += `
+                            <tr>
+                                <td>${filename}</td>
+                                <td>${status} ${info.exists ? `(${formatFileSize(info.size)})` : ''}</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    if (data.last_backup) {
+                        tableHTML += `
+                            <tr class="table-info">
+                                <td><strong>最近备份</strong></td>
+                                <td>${data.last_backup.name} (${formatDateTime(data.last_backup.created_at)})</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    tableBody.innerHTML = tableHTML;
+                }
+            } catch (error) {
+                console.error('Failed to load system status:', error);
+                showToast('加载系统状态失败', 'error');
+            }
+        }
+
+        // Load backup list
+        async function loadBackupList() {
+            try {
+                const response = await fetch('/api/backup/list');
+                const result = await response.json();
+                
+                const backupListDiv = document.getElementById('backupList');
+                
+                if (result.code === 200 && result.data.length > 0) {
+                    let listHTML = '';
+                    
+                    result.data.forEach(backup => {
+                        listHTML += `
+                            <div class="backup-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-archive"></i> ${backup.name}
+                                        </h6>
+                                        <p class="mb-1 text-muted small">
+                                            创建时间: ${formatDateTime(backup.created_at)}
+                                        </p>
+                                        <p class="mb-1 text-muted small">
+                                            大小: ${backup.zip_size_human || formatFileSize(backup.zip_size)}
+                                        </p>
+                                        ${backup.backed_up_files ? `
+                                            <p class="mb-1 text-muted small">
+                                                文件数: ${backup.backed_up_files.length} 数据文件
+                                                ${backup.html_files_count ? ` + ${backup.html_files_count} HTML文件` : ''}
+                                            </p>
+                                        ` : ''}
+                                    </div>
+                                    <div class="backup-actions">
+                                        <button class="btn btn-warning-gradient btn-sm" 
+                                                onclick="confirmRestore('${backup.name}', '${backup.created_at}')">
+                                            <i class="fas fa-history"></i> 恢复
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" 
+                                                onclick="deleteBackup('${backup.name}')">
+                                            <i class="fas fa-trash"></i> 删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    backupListDiv.innerHTML = listHTML;
+                } else {
+                    backupListDiv.innerHTML = `
+                        <div class="text-center text-muted">
+                            <i class="fas fa-inbox"></i>
+                            <p class="mt-2">暂无备份</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to load backup list:', error);
+                document.getElementById('backupList').innerHTML = `
+                    <div class="text-center text-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p class="mt-2">加载失败</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create backup
+        async function createBackup() {
+            const backupName = document.getElementById('newBackupName').value.trim();
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/backup/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        backup_name: backupName || null
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    showToast('备份创建成功', 'success');
+                    document.getElementById('newBackupName').value = '';
+                    await loadBackupList();
+                    await loadSystemStatus();
+                } else {
+                    showToast(result.message || '备份创建失败', 'error');
+                }
+            } catch (error) {
+                console.error('Failed to create backup:', error);
+                showToast('备份创建失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Confirm system reset
+        function confirmSystemReset() {
+            const modal = new bootstrap.Modal(document.getElementById('confirmResetModal'));
+            modal.show();
+        }
+
+        // Perform system reset
+        async function performSystemReset() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmResetModal'));
+            modal.hide();
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/backup/reset', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    showToast('系统已重置到默认状态', 'success');
+                    await loadBackupList();
+                    await loadSystemStatus();
+                } else {
+                    showToast(result.message || '系统重置失败', 'error');
+                }
+            } catch (error) {
+                console.error('Failed to reset system:', error);
+                showToast('系统重置失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Confirm restore
+        function confirmRestore(backupName, createdAt) {
+            selectedBackupName = backupName;
+            document.getElementById('restoreBackupName').textContent = backupName;
+            document.getElementById('restoreBackupTime').textContent = formatDateTime(createdAt);
+            
+            const modal = new bootstrap.Modal(document.getElementById('confirmRestoreModal'));
+            modal.show();
+        }
+
+        // Perform restore
+        async function performRestore() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmRestoreModal'));
+            modal.hide();
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/backup/restore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        backup_name: selectedBackupName
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    showToast('系统已成功恢复', 'success');
+                    await loadSystemStatus();
+                } else {
+                    showToast(result.message || '恢复失败', 'error');
+                }
+            } catch (error) {
+                console.error('Failed to restore backup:', error);
+                showToast('恢复失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Delete backup
+        async function deleteBackup(backupName) {
+            if (!confirm(`确定要删除备份 "${backupName}" 吗？此操作不可撤销。`)) {
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/backup/delete/${backupName}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    showToast('备份已删除', 'success');
+                    await loadBackupList();
+                    await loadSystemStatus();
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('Failed to delete backup:', error);
+                showToast('删除失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Utility functions
+        function formatFileSize(bytes) {
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+
+        function formatDateTime(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('zh-CN');
+        }
+    </script>
+</body>
+</html> 
