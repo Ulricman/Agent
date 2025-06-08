@@ -116,7 +116,9 @@
         /* 选择动画 */
         animation: login_mation 0.5s;
     }
-
+    .form-control {
+        color: white !important;
+    }
     /* 定义动画 */
     @keyframes login_mation {
         from {
@@ -128,6 +130,13 @@
             background-color: transparent;
             box-shadow: 2px 2px 15px 2px rgb(190, 225, 255);
         }
+    }
+
+    .login_form label[for="username"],
+    .login_form label[for="password"] {
+        color: white;
+        font-size: 18px;
+        font-weight: 100;
     }
 </style>
 
