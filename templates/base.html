@@ -44,7 +44,6 @@
             {% endif %}
             <li><a href="/auth/logout">退出登录</a></li>
         </ul>
-        <div class="spacer"></div>
         <div class="robot">
             <img src="/static/images/robot.png" alt="robot-image" width="170">
         </div>
@@ -130,10 +129,10 @@
     }
 
     .robot {
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
+        position: absolute;
+        bottom: 65px;
+        left: 0px;
+        width: 100%;
     }
 
     /* Sidebar切换按钮样式 */
