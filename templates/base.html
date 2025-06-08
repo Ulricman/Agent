@@ -11,7 +11,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
     <!-- Sidebar切换按钮 -->
     <div class="sidebar-toggle-btn" id="sidebarToggle">
         <i class="fas fa-chevron-left" id="toggleIcon"></i>
@@ -24,14 +23,7 @@
                 <i class="fas fa-times"></i>
             </div>
         </div>
-=======
-    <div class="notification-button">
-        <i class="fas fa-bell"></i>
-    </div>
 
-    <div class="sidebar">
-        <h2>KnowTax 智知税典</h2>
->>>>>>> 4ccfb6e (添加了通知中心，覆盖了通知和备忘录功能。优化侧边栏logo)
         <ul>
             <li><a href="/data/policies">税务政策库</a></li>
             <li><a href="/data/qa">问答库</a></li>
@@ -55,14 +47,6 @@
             <img src="/static/images/robot.png" alt="robot-image" width="170">
         </div>
     </div>
-<<<<<<< HEAD
-    <div class="content" id="content">
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- 遮罩层 -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-=======
     <div class="content">
         <div class="header">
             <div class="notification-btn">
@@ -79,7 +63,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div class="notification-section">
             <h4>提醒</h4>
             <div class="scrollable-content">
@@ -103,7 +87,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="memo-section">
             <div class="memo-header">
                 <h4>备忘录</h4>
@@ -136,7 +120,6 @@
 
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/notification.js"></script>
->>>>>>> 4ccfb6e (添加了通知中心，覆盖了通知和备忘录功能。优化侧边栏logo)
 </body>
 
 <style>
@@ -150,7 +133,7 @@
         flex-direction: column;
         justify-content: flex-end;
     }
-    
+
     /* Sidebar切换按钮样式 */
     .sidebar-toggle-btn {
         position: fixed;
@@ -169,38 +152,38 @@
         box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         transition: all 0.3s ease;
     }
-    
+
     .sidebar-toggle-btn:hover {
         transform: translateY(-50%) scale(1.1);
         box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
     }
-    
+
     .sidebar-toggle-btn i {
         color: white;
         font-size: 18px;
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding-bottom: 15px;
     }
-    
+
     .sidebar-close-btn {
         cursor: pointer;
         color: #ecf0f1;
         font-size: 18px;
         transition: color 0.3s ease;
     }
-    
+
     .sidebar-close-btn:hover {
         color: #3498db;
     }
-    
+
     /* 遮罩层样式 - 限定在切换按钮附近 */
     .overlay {
         position: fixed;
@@ -217,13 +200,13 @@
         pointer-events: none;
         backdrop-filter: blur(2px);
     }
-    
+
     .overlay.active {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
     }
-    
+
     /* 添加遮罩层提示效果 */
     .overlay::before {
         content: '点击收起';
@@ -237,24 +220,24 @@
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-    
+
     .overlay.active::before {
         opacity: 0.8;
     }
-    
+
     /* Sidebar收缩状态 */
     body.sidebar-collapsed .sidebar {
         transform: translateX(-250px);
     }
-    
+
     body.sidebar-collapsed .content {
         margin-left: 0;
     }
-    
+
     body.sidebar-collapsed .sidebar-toggle-btn i {
         transform: rotate(180deg);
     }
-    
+
     /* 特殊容器在sidebar收缩时的适应 */
     body.sidebar-collapsed .container[style*="margin-left: 280px"] {
         margin-left: 20px !important;
@@ -263,44 +246,44 @@
 </style>
 
 <script>
-function toggleSidebar() {
-    const body = document.body;
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    // 切换sidebar状态
-    if (body.classList.contains('sidebar-collapsed')) {
-        // 展开sidebar
-        body.classList.remove('sidebar-collapsed');
-        overlay.classList.remove('active');
-        toggleIcon.className = 'fas fa-chevron-left';
-    } else {
-        // 收缩sidebar
-        body.classList.add('sidebar-collapsed');
-        overlay.classList.add('active');
-        toggleIcon.className = 'fas fa-chevron-right';
-    }
-}
+    function toggleSidebar() {
+        const body = document.body;
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleIcon = document.getElementById('toggleIcon');
 
-// 页面加载完成后初始化
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    sidebarToggle.addEventListener('click', toggleSidebar);
-    
-    // 为页面添加动画效果
-    const content = document.getElementById('content');
-    if (content) {
-        content.style.opacity = '0';
-        content.style.transform = 'translateY(20px)';
-        content.style.transition = 'all 0.6s ease';
-        
-        setTimeout(() => {
-            content.style.opacity = '1';
-            content.style.transform = 'translateY(0)';
-        }, 200);
+        // 切换sidebar状态
+        if (body.classList.contains('sidebar-collapsed')) {
+            // 展开sidebar
+            body.classList.remove('sidebar-collapsed');
+            overlay.classList.remove('active');
+            toggleIcon.className = 'fas fa-chevron-left';
+        } else {
+            // 收缩sidebar
+            body.classList.add('sidebar-collapsed');
+            overlay.classList.add('active');
+            toggleIcon.className = 'fas fa-chevron-right';
+        }
     }
-});
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        sidebarToggle.addEventListener('click', toggleSidebar);
+
+        // 为页面添加动画效果
+        const content = document.getElementById('content');
+        if (content) {
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(20px)';
+            content.style.transition = 'all 0.6s ease';
+
+            setTimeout(() => {
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+            }, 200);
+        }
+    });
 </script>
 
 </html>
