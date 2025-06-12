@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="permissions-container"
+    style="padding: 20px 80px 20px 40px; margin-left: 280px; max-width: calc(100% - 320px);">
+    <!-- Header with User Info and Logout -->
+    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0; color: #333;">权限管理</h2>
+        <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+            <div class="user-details" style="text-align: right;">
+                <div style="font-weight: bold; color: #333;">{{ session.username }}</div>
+                <div style="font-size: 12px; color: #666;">系统管理员</div>
+            </div>
+            <div class="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                {{ session.username[0].upper() if session.username else 'A' }}
+            </div>
+            <a href="/auth/logout" class="logout-btn" style="background: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 5px; transition: background-color 0.3s;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                <i class="fas fa-sign-out-alt"></i>
+                退出登录
+            </a>
+        </div>
+    </div>
+    
+    <!-- Search and Filter Bar -->
+    <div class="filter-bar" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <div>
+                <input type="text" placeholder="搜索用户名..." style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; width: 200px;">
+            </div>
+            <div>
+                <select style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">所有角色</option>
+                    <option value="admin">管理员</option>
+                    <option value="manager">经理</option>
+                    <option value="service">客服</option>
+                </select>
+            </div>
+            <div>
+                <select style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">所有状态</option>
+                    <option value="active">活跃</option>
+                    <option value="inactive">非活跃</option>
+                    <option value="locked">锁定</option>
+                </select>
+            </div>
+            <button style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                🔍 搜索
+            </button>
+            <button style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                ➕ 添加用户
+            </button>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="user-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 1.5em; font-weight: bold; color: #1976d2;">156</div>
+            <div style="color: #555;">总用户数</div>
+        </div>
+        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 1.5em; font-weight: bold; color: #388e3c;">12</div>
+            <div style="color: #555;">管理员</div>
+        </div>
+        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 1.5em; font-weight: bold; color: #f57c00;">45</div>
+            <div style="color: #555;">经理</div>
+        </div>
+        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 1.5em; font-weight: bold; color: #7b1fa2;">99</div>
+            <div style="color: #555;">客服</div>
+        </div>
+    </div>
+
+    <!-- User Management Table -->
+    <div class="user-table" style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f8f9fa;">
+                <tr>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">
+                        <input type="checkbox" style="margin-right: 8px;">用户ID
+                    </th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">用户名</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">角色</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">状态</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">最后登录</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">创建时间</th>
+                    <th style="padding: 12px; text-align: center; border-bottom: 1px solid #dee2e6;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">
+                        <input type="checkbox" style="margin-right: 8px;">001
+                    </td>
+                    <td style="padding: 12px;">admin_user</td>
+                    <td style="padding: 12px;">
+                        <span style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">管理员</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: #28a745; font-weight: bold;">● 活跃</span>
+                    </td>
+                    <td style="padding: 12px;">2024-01-15 09:30</td>
+                    <td style="padding: 12px;">2023-06-15</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">编辑</button>
+                        <button style="background: #ffc107; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">重置</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">禁用</button>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">
+                        <input type="checkbox" style="margin-right: 8px;">002
+                    </td>
+                    <td style="padding: 12px;">manager_user</td>
+                    <td style="padding: 12px;">
+                        <span style="background: #ffc107; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">经理</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: #28a745; font-weight: bold;">● 活跃</span>
+                    </td>
+                    <td style="padding: 12px;">2024-01-15 14:22</td>
+                    <td style="padding: 12px;">2023-07-20</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">编辑</button>
+                        <button style="background: #ffc107; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">重置</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">禁用</button>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">
+                        <input type="checkbox" style="margin-right: 8px;">003
+                    </td>
+                    <td style="padding: 12px;">service_user</td>
+                    <td style="padding: 12px;">
+                        <span style="background: #6f42c1; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">客服</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: #28a745; font-weight: bold;">● 活跃</span>
+                    </td>
+                    <td style="padding: 12px;">2024-01-15 16:45</td>
+                    <td style="padding: 12px;">2023-08-10</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">编辑</button>
+                        <button style="background: #ffc107; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">重置</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">禁用</button>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">
+                        <input type="checkbox" style="margin-right: 8px;">004
+                    </td>
+                    <td style="padding: 12px;">tax_manager_01</td>
+                    <td style="padding: 12px;">
+                        <span style="background: #ffc107; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">经理</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: #6c757d; font-weight: bold;">● 离线</span>
+                    </td>
+                    <td style="padding: 12px;">2024-01-14 18:30</td>
+                    <td style="padding: 12px;">2023-09-05</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">编辑</button>
+                        <button style="background: #ffc107; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">重置</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">禁用</button>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">
+                        <input type="checkbox" style="margin-right: 8px;">005
+                    </td>
+                    <td style="padding: 12px;">service_support</td>
+                    <td style="padding: 12px;">
+                        <span style="background: #6f42c1; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">客服</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: #dc3545; font-weight: bold;">● 锁定</span>
+                    </td>
+                    <td style="padding: 12px;">2024-01-10 11:15</td>
+                    <td style="padding: 12px;">2023-10-12</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">编辑</button>
+                        <button style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">解锁</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 0 2px; cursor: pointer;">删除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+        <div style="color: #6c757d;">
+            显示 1-5 条，共 156 条记录
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">上一页</button>
+            <button style="padding: 8px 12px; border: 1px solid #007bff; background: #007bff; color: white; border-radius: 4px; cursor: pointer;">1</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">2</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">3</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">下一页</button>
+        </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="color: #6c757d;">批量操作：</span>
+            <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">批量启用</button>
+            <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">批量禁用</button>
+            <button style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">批量重置密码</button>
+            <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">导出数据</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

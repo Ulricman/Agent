@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="update-container" style="padding: 20px 80px 20px 40px; margin-left: 280px; max-width: calc(100% - 320px);">
+    <!-- Header with User Info and Logout -->
+    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0; color: #333;">政策更新管理</h2>
+        <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+            <div class="user-details" style="text-align: right;">
+                <div style="font-weight: bold; color: #333;">{{ session.username }}</div>
+                <div style="font-size: 12px; color: #666;">知识管理岗</div>
+            </div>
+            <div class="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                {{ session.username[0].upper() if session.username else 'M' }}
+            </div>
+            <a href="/auth/logout" class="logout-btn" style="background: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 5px; transition: background-color 0.3s;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                <i class="fas fa-sign-out-alt"></i>
+                退出登录
+            </a>
+        </div>
+    </div>
+    
+    <!-- Update Statistics -->
+    <div class="update-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #1976d2;">本周新增</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #1976d2;">8</div>
+            <div style="color: #666; font-size: 0.9em;">条政策更新</div>
+        </div>
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #856404;">待发布</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #856404;">5</div>
+            <div style="color: #666; font-size: 0.9em;">等待审核</div>
+        </div>
+        <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #155724;">已发布</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #155724;">23</div>
+            <div style="color: #666; font-size: 0.9em;">本月累计</div>
+        </div>
+        <div style="background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #721c24;">紧急更新</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #721c24;">2</div>
+            <div style="color: #666; font-size: 0.9em;">需立即处理</div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                    ➕ 新增政策
+                </button>
+                <button style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                    🔄 同步远程
+                </button>
+                <button style="background: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                    📋 批量操作
+                </button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <select style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">全部状态</option>
+                    <option value="draft">草稿</option>
+                    <option value="pending">待审核</option>
+                    <option value="published">已发布</option>
+                    <option value="urgent">紧急</option>
+                </select>
+                <input type="text" placeholder="搜索政策..." style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; width: 200px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Policy Updates List -->
+    <div class="updates-list" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0;">
+        <!-- Update Item 1 -->
+        <div class="update-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: #333;">《个人所得税专项附加扣除暂行办法》修订</h4>
+                        <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">紧急</span>
+                        <span style="background: #ffc107; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">待审核</span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9em; margin: 5px 0;">
+                        发布机构：国家税务总局 • 生效时间：2024-02-01 • 影响范围：全国
+                    </div>
+                    <p style="color: #555; margin: 10px 0; line-height: 1.5;">
+                        根据最新政策要求，个人所得税专项附加扣除标准进行调整，包括子女教育、赡养老人等扣除标准提高，预计影响纳税人约5000万人...
+                    </p>
+                </div>
+                <div style="text-align: right; margin-left: 20px;">
+                    <div style="color: #666; font-size: 0.9em;">提交时间</div>
+                    <div style="font-weight: bold;">2024-01-15 14:30</div>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">提交人：李政策</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">版本: v1.2</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">字数: 1,245</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">附件: 3个</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">预览</button>
+                    <button style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">编辑</button>
+                    <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">批准发布</button>
+                    <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">驳回</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Item 2 -->
+        <div class="update-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: #333;">增值税发票管理系统升级公告</h4>
+                        <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">已发布</span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9em; margin: 5px 0;">
+                        发布机构：税务总局征管司 • 生效时间：2024-01-20 • 影响范围：全国
+                    </div>
+                    <p style="color: #555; margin: 10px 0; line-height: 1.5;">
+                        为提升发票管理效率，增值税发票管理系统将进行重大升级，新增电子发票批量下载、智能验真等功能...
+                    </p>
+                </div>
+                <div style="text-align: right; margin-left: 20px;">
+                    <div style="color: #666; font-size: 0.9em;">发布时间</div>
+                    <div style="font-weight: bold;">2024-01-14 10:00</div>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">发布人：王管理</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">版本: v2.1</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">阅读: 2,340</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">下载: 567</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">查看</button>
+                    <button style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">统计</button>
+                    <button style="background: #ffc107; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">修订</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Item 3 -->
+        <div class="update-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: #333;">小微企业税收优惠政策延续实施</h4>
+                        <span style="background: #007bff; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">草稿</span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9em; margin: 5px 0;">
+                        发布机构：税务总局政策司 • 生效时间：2024-01-01 • 影响范围：全国
+                    </div>
+                    <p style="color: #555; margin: 10px 0; line-height: 1.5;">
+                        继续执行小微企业所得税优惠政策，对年应纳税所得额不超过100万元的小微企业，减按12.5%计入...
+                    </p>
+                </div>
+                <div style="text-align: right; margin-left: 20px;">
+                    <div style="color: #666; font-size: 0.9em;">保存时间</div>
+                    <div style="font-weight: bold;">2024-01-15 16:45</div>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">编辑人：张编辑</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">版本: v1.0</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">进度: 80%</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">字数: 890</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">预览</button>
+                    <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">继续编辑</button>
+                    <button style="background: #ffc107; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">提交审核</button>
+                    <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">删除</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Item 4 -->
+        <div class="update-item" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: #333;">2024年度企业所得税汇算清缴指南</h4>
+                        <span style="background: #6f42c1; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">预计划</span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9em; margin: 5px 0;">
+                        发布机构：税务总局所得税司 • 生效时间：2024-03-01 • 影响范围：全国
+                    </div>
+                    <p style="color: #555; margin: 10px 0; line-height: 1.5;">
+                        为规范2024年度企业所得税汇算清缴工作，确保企业准确计算和申报所得税，现制定本年度汇算清缴指南...
+                    </p>
+                </div>
+                <div style="text-align: right; margin-left: 20px;">
+                    <div style="color: #666; font-size: 0.9em;">计划时间</div>
+                    <div style="font-weight: bold;">2024-02-15</div>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">负责人：刘专员</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">优先级: 高</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">类型: 指南</span>
+                    <span style="background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">状态: 筹备中</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">计划详情</button>
+                    <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">开始制作</button>
+                    <button style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">修改计划</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+        <div style="color: #6c757d;">
+            显示 1-4 条，共 18 条政策更新
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">上一页</button>
+            <button style="padding: 8px 12px; border: 1px solid #007bff; background: #007bff; color: white; border-radius: 4px; cursor: pointer;">1</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">2</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">3</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">下一页</button>
+        </div>
+    </div>
+
+    <!-- Update Schedule -->
+    <div class="update-schedule" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0;">
+        <h3 style="margin: 0 0 20px 0;">更新日程安排</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+            <div style="background: #cce7ff; border-left: 4px solid #007bff; padding: 15px; border-radius: 6px;">
+                <h4 style="margin: 0 0 10px 0; color: #004085;">📅 本周计划</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #333;">
+                    <li>完成个税专项扣除修订</li>
+                    <li>审核3个待发布政策</li>
+                    <li>准备汇算清缴指南框架</li>
+                </ul>
+            </div>
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 6px;">
+                <h4 style="margin: 0 0 10px 0; color: #856404;">⚠️ 注意事项</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #333;">
+                    <li>个税政策影响面广，需仔细审核</li>
+                    <li>发票系统升级需协调各地税务局</li>
+                    <li>汇算清缴指南需在3月前完成</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

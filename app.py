@@ -5,6 +5,7 @@ from routes.manager import manager_bp
 from routes.service import service_bp
 from routes.data import data_bp
 from routes.backend import backend_bp
+from routes.approval import approval_bp
 from models.user import db, User
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ app.register_blueprint(manager_bp, url_prefix="/manager")
 app.register_blueprint(service_bp, url_prefix="/service")
 app.register_blueprint(data_bp, url_prefix="/data")
 app.register_blueprint(backend_bp, url_prefix="/backend")
+app.register_blueprint(approval_bp, url_prefix="/approval")
 
 # 注册新的集成蓝图
 from routes.integration import integration_bp

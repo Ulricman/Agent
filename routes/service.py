@@ -27,19 +27,19 @@ BACKEND_URL = 'http://localhost:8000'
 @login_required
 @service_required
 def search():
-    return render_template('service_search.html')
+    return render_template('service/search.html')
 
 @service_bp.route('/user-status')
 @login_required
 @service_required
 def user_status():
-    return render_template('service_user_status.html')
+    return render_template('service/user_status.html')
 
 @service_bp.route('/')
 @login_required
 @service_required
 def service_index():
-    return render_template('service_index.html', title="知识服务岗")
+    return render_template('service/index.html', title="知识服务岗")
 
 # API endpoints for frontend integration
 @service_bp.route('/api/search-knowledge')

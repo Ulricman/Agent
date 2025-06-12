@@ -39,7 +39,7 @@ def make_backend_request(endpoint, method='GET', data=None):
 @backend_bp.route('/dashboard')
 def dashboard():
     """Backend management dashboard"""
-    return render_template('backend_dashboard.html')
+    return render_template('backend_integration.html')
 
 @backend_bp.route('/api/status')
 def backend_status():
@@ -166,7 +166,7 @@ def knowledge_management():
 @backend_bp.route('/qa-management')
 def qa_management():
     """QA system management interface"""
-    return render_template('qa_management.html')
+    return render_template('qa_system.html')
 
 @backend_bp.route('/announcement-generator')
 def announcement_generator():
@@ -204,7 +204,7 @@ def enhanced_policies():
             }
         ]
     
-    return render_template("enhanced_table.html", 
+    return render_template("policies_intro.html", 
                          title="增强税务政策库", 
                          data=backend_data,
                          headers=["ID", "标题", "分类", "生效日期", "状态"],
@@ -228,7 +228,7 @@ def enhanced_qa():
             }
         ]
     
-    return render_template("enhanced_qa_table.html",
+    return render_template("qa_intro.html",
                          title="增强问答库",
                          data=backend_data,
                          headers=["ID", "问题", "回答", "分类", "置信度"],

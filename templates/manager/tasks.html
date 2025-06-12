@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="tasks-container" style="padding: 20px 80px 20px 40px; margin-left: 280px; max-width: calc(100% - 320px);">
+    <!-- Header with User Info and Logout -->
+    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0; color: #333;">待审批任务管理</h2>
+        <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+            <div class="user-details" style="text-align: right;">
+                <div style="font-weight: bold; color: #333;">{{ session.username }}</div>
+                <div style="font-size: 12px; color: #666;">知识管理岗</div>
+            </div>
+            <div class="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                {{ session.username[0].upper() if session.username else 'M' }}
+            </div>
+            <a href="/auth/logout" class="logout-btn" style="background: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 5px; transition: background-color 0.3s;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                <i class="fas fa-sign-out-alt"></i>
+                退出登录
+            </a>
+        </div>
+    </div>
+    
+    <!-- Task Summary Cards -->
+    <div class="task-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #856404;">待处理</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #856404;">23</div>
+        </div>
+        <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #155724;">今日已完成</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #155724;">18</div>
+        </div>
+        <div style="background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #721c24;">已驳回</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #721c24;">5</div>
+        </div>
+        <div style="background: #cce7ff; border-left: 4px solid #007bff; padding: 15px; border-radius: 8px;">
+            <h4 style="margin: 0; color: #004085;">本周总计</h4>
+            <div style="font-size: 2em; font-weight: bold; color: #004085;">156</div>
+        </div>
+    </div>
+
+    <!-- Filter and Actions -->
+    <div class="filter-actions" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <select style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">所有类型</option>
+                    <option value="policy">政策更新</option>
+                    <option value="user">用户申请</option>
+                    <option value="content">内容审核</option>
+                    <option value="system">系统配置</option>
+                </select>
+                <select style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">所有优先级</option>
+                    <option value="high">高优先级</option>
+                    <option value="medium">中优先级</option>
+                    <option value="low">低优先级</option>
+                </select>
+                <input type="date" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">批量批准</button>
+                <button style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">批量驳回</button>
+                <button style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">导出报告</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="tasks-list" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0;">
+        <!-- Task Item 1 -->
+        <div class="task-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 15px;">
+            <input type="checkbox" style="transform: scale(1.2);">
+            <div style="width: 50px; height: 50px; background: #e3f2fd; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 1.2em;">
+                📄
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <div>
+                        <h4 style="margin: 0; color: #333;">新增税务政策：企业所得税汇算清缴指南</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">高优先级</span>
+                            <span style="background: #6f42c1; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">政策更新</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; color: #666; font-size: 0.9em;">
+                        <div>提交时间：2024-01-15 10:30</div>
+                        <div>提交人：李税务</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin: 10px 0; line-height: 1.5;">
+                    根据最新税务总局公告，需要更新企业所得税汇算清缴相关政策条文，涉及新的扣除项目和计算方法...
+                </p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #666; font-size: 0.9em;">
+                        预计影响用户：<strong>1,245人</strong> • 截止时间：2024-01-18
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">查看详情</button>
+                        <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✓ 批准</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✗ 驳回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Item 2 -->
+        <div class="task-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 15px;">
+            <input type="checkbox" style="transform: scale(1.2);">
+            <div style="width: 50px; height: 50px; background: #fff3e0; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 1.2em;">
+                👤
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <div>
+                        <h4 style="margin: 0; color: #333;">新用户权限申请：金财会计师事务所</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <span style="background: #ffc107; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">中优先级</span>
+                            <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">用户申请</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; color: #666; font-size: 0.9em;">
+                        <div>提交时间：2024-01-15 14:20</div>
+                        <div>申请人：张会计</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin: 10px 0; line-height: 1.5;">
+                    申请企业级账户权限，需要访问增值税专票管理、企业所得税汇算等高级功能模块...
+                </p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #666; font-size: 0.9em;">
+                        企业规模：<strong>中型企业</strong> • 员工数量：85人
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">查看资质</button>
+                        <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✓ 批准</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✗ 驳回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Item 3 -->
+        <div class="task-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 15px;">
+            <input type="checkbox" style="transform: scale(1.2);">
+            <div style="width: 50px; height: 50px; background: #e8f5e8; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 1.2em;">
+                📝
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <div>
+                        <h4 style="margin: 0; color: #333;">问答库内容更新：增值税发票管理FAQ</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">低优先级</span>
+                            <span style="background: #fd7e14; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">内容审核</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; color: #666; font-size: 0.9em;">
+                        <div>提交时间：2024-01-15 16:45</div>
+                        <div>提交人：王编辑</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin: 10px 0; line-height: 1.5;">
+                    根据用户反馈，更新了15条增值税发票相关的常见问题解答，新增电子发票管理流程说明...
+                </p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #666; font-size: 0.9em;">
+                        内容变更：<strong>15项更新</strong> • 影响模块：发票管理
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">预览内容</button>
+                        <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✓ 批准</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✗ 驳回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Item 4 -->
+        <div class="task-item" style="padding: 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 15px;">
+            <input type="checkbox" style="transform: scale(1.2);">
+            <div style="width: 50px; height: 50px; background: #f3e5f5; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 1.2em;">
+                ⚙️
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <div>
+                        <h4 style="margin: 0; color: #333;">系统配置变更：备份策略优化</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <span style="background: #ffc107; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">中优先级</span>
+                            <span style="background: #6c757d; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">系统配置</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; color: #666; font-size: 0.9em;">
+                        <div>提交时间：2024-01-14 09:15</div>
+                        <div>提交人：系统管理员</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin: 10px 0; line-height: 1.5;">
+                    建议将数据备份频率调整为每6小时一次，并启用增量备份机制，预计可节省50%存储空间...
+                </p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #666; font-size: 0.9em;">
+                        影响范围：<strong>全系统</strong> • 维护窗口：需要
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">技术详情</button>
+                        <button style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✓ 批准</button>
+                        <button style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✗ 驳回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+        <div style="color: #6c757d;">
+            显示 1-4 条，共 23 条任务
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">上一页</button>
+            <button style="padding: 8px 12px; border: 1px solid #007bff; background: #007bff; color: white; border-radius: 4px; cursor: pointer;">1</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">2</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">3</button>
+            <button style="padding: 8px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer;">下一页</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

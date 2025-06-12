@@ -1,0 +1,931 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    .approval-dashboard {
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        border-left: 4px solid #28a745;
+    }
+    
+    .stat-card.pending { border-left-color: #ffc107; }
+    .stat-card.approved { border-left-color: #28a745; }
+    .stat-card.rejected { border-left-color: #dc3545; }
+    .stat-card.urgent { border-left-color: #e74c3c; }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .manager-notice {
+        background: #e8f5e8;
+        border: 1px solid #28a745;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #155724;
+    }
+    
+    .manager-notice i {
+        color: #28a745;
+        margin-right: 10px;
+    }
+    
+    .controls-section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .filter-controls {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .filter-group label {
+        font-size: 12px;
+        color: #666;
+        font-weight: bold;
+    }
+    
+    .filter-select, .filter-input {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary { background: #28a745; color: white; }
+    .btn-success { background: #28a745; color: white; }
+    .btn-danger { background: #dc3545; color: white; }
+    .btn-warning { background: #ffc107; color: #333; }
+    .btn-secondary { background: #6c757d; color: white; }
+    
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    
+    .approval-table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+    
+    .table th {
+        background: #f8f9fa;
+        padding: 15px;
+        text-align: left;
+        font-weight: bold;
+        color: #333;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .table td {
+        padding: 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: top;
+    }
+    
+    .table tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .priority-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .priority-urgent { background: #ffebee; color: #c62828; }
+    .priority-high { background: #fff3e0; color: #ef6c00; }
+    .priority-normal { background: #e8f5e8; color: #2e7d32; }
+    .priority-low { background: #f3e5f5; color: #7b1fa2; }
+    
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .status-pending { background: #fff8e1; color: #f57f17; }
+    .status-approved { background: #e8f5e8; color: #2e7d32; }
+    .status-rejected { background: #ffebee; color: #c62828; }
+    
+    .qa-preview {
+        max-width: 300px;
+    }
+    
+    .qa-question {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .qa-answer {
+        color: #666;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .action-buttons-cell {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 20px;
+    }
+    
+    .pagination button {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    
+    .pagination button:hover:not(:disabled) {
+        background: #f8f9fa;
+    }
+    
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .close {
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #aaa;
+    }
+    
+    .close:hover {
+        color: #000;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 0 2px rgba(40,167,69,0.25);
+    }
+    
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .history-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .history-item {
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        border-left: 3px solid #28a745;
+    }
+    
+    .history-meta {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+    
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="approval-dashboard">
+    <!-- Header with User Info and Logout -->
+    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0; color: #333;">问答库审批管理</h2>
+        <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+            <div class="user-details" style="text-align: right;">
+                <div style="font-weight: bold; color: #333;">{{ session.username }}</div>
+                <div style="font-size: 12px; color: #666;">知识管理岗</div>
+            </div>
+            <div class="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                {{ session.username[0].upper() if session.username else 'M' }}
+            </div>
+            <a href="/auth/logout" class="logout-btn" style="background: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 5px; transition: background-color 0.3s;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                <i class="fas fa-sign-out-alt"></i>
+                退出登录
+            </a>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="refreshData()">
+                <i class="fas fa-sync"></i> 刷新数据
+            </button>
+        </div>
+    </div>
+    
+    <!-- Manager Notice -->
+    <div class="manager-notice">
+        <i class="fas fa-info-circle"></i>
+        <strong>经理权限说明：</strong> 您可以审批问答库内容，知识库内容需要管理员审批。
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card pending">
+            <span class="stat-number" id="pendingCount">-</span>
+            <div class="stat-label">待审批问答</div>
+        </div>
+        <div class="stat-card approved">
+            <span class="stat-number" id="approvedCount">-</span>
+            <div class="stat-label">已批准问答</div>
+        </div>
+        <div class="stat-card rejected">
+            <span class="stat-number" id="rejectedCount">-</span>
+            <div class="stat-label">已拒绝问答</div>
+        </div>
+        <div class="stat-card urgent">
+            <span class="stat-number" id="urgentCount">-</span>
+            <div class="stat-label">紧急待审</div>
+        </div>
+    </div>
+    
+    <!-- Filter Controls -->
+    <div class="controls-section">
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label>状态</label>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">全部状态</option>
+                    <option value="pending" selected>待审批</option>
+                    <option value="approved">已批准</option>
+                    <option value="rejected">已拒绝</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>优先级</label>
+                <select class="filter-select" id="priorityFilter">
+                    <option value="">全部优先级</option>
+                    <option value="urgent">紧急</option>
+                    <option value="high">高</option>
+                    <option value="normal">普通</option>
+                    <option value="low">低</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>每页显示</label>
+                <select class="filter-select" id="perPageFilter">
+                    <option value="10">10条</option>
+                    <option value="20">20条</option>
+                    <option value="50">50条</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i> 应用筛选
+                </button>
+                <button class="btn btn-secondary" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> 重置
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- QA Approval Requests Table -->
+    <div class="approval-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>问答内容</th>
+                    <th>分类</th>
+                    <th>提交者</th>
+                    <th>优先级</th>
+                    <th>状态</th>
+                    <th>提交时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="approvalTableBody">
+                <tr>
+                    <td colspan="8" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> 加载中...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+        <!-- Pagination will be generated by JavaScript -->
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>审批问答内容</h3>
+            <span class="close" onclick="closeReviewModal()">&times;</span>
+        </div>
+        <div id="reviewModalBody">
+            <!-- Modal content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<script>
+let currentPage = 1;
+let currentFilters = {
+    status: 'pending',
+    content_type: 'qa', // Manager only sees QA content
+    priority: '',
+    per_page: 10
+};
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadApprovalRequests();
+    
+    // Set up filter change handlers
+    document.getElementById('statusFilter').addEventListener('change', applyFilters);
+    document.getElementById('priorityFilter').addEventListener('change', applyFilters);
+    document.getElementById('perPageFilter').addEventListener('change', applyFilters);
+});
+
+function loadStats() {
+    fetch('/approval/api/stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('pendingCount').textContent = data.data.pending;
+                document.getElementById('approvedCount').textContent = data.data.approved;
+                document.getElementById('rejectedCount').textContent = data.data.rejected;
+                document.getElementById('urgentCount').textContent = data.data.priority_breakdown.urgent;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading stats:', error);
+        });
+}
+
+function loadApprovalRequests() {
+    const params = new URLSearchParams({
+        page: currentPage,
+        ...currentFilters
+    });
+    
+    fetch(`/approval/api/requests?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderApprovalTable(data.data);
+                renderPagination(data.current_page, data.pages, data.total);
+            } else {
+                showError('加载审批请求失败: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading approval requests:', error);
+            showError('加载审批请求失败');
+        });
+}
+
+function renderApprovalTable(requests) {
+    const tbody = document.getElementById('approvalTableBody');
+    
+    if (requests.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <div>暂无问答审批请求</div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tbody.innerHTML = requests.map(request => `
+        <tr>
+            <td>#${request.id}</td>
+            <td>
+                <div class="qa-preview">
+                    <div class="qa-question" title="${request.question || request.title}">
+                        <i class="fas fa-question-circle text-primary"></i> ${request.question || request.title}
+                    </div>
+                    ${request.answer ? `
+                        <div class="qa-answer" title="${request.answer}">
+                            <i class="fas fa-answer text-success"></i> ${request.answer}
+                        </div>
+                    ` : ''}
+                </div>
+            </td>
+            <td>
+                ${request.category ? `<span class="badge badge-secondary">${request.category}</span>` : '-'}
+                ${request.tags ? `<br><small class="text-muted">${request.tags}</small>` : ''}
+            </td>
+            <td>${request.submitter_name}</td>
+            <td>
+                <span class="priority-badge priority-${request.priority}">
+                    ${getPriorityText(request.priority)}
+                </span>
+            </td>
+            <td>
+                <span class="status-badge status-${request.status}">
+                    ${getStatusText(request.status)}
+                </span>
+            </td>
+            <td>${formatDate(request.created_at)}</td>
+            <td>
+                <div class="action-buttons-cell">
+                    <button class="btn btn-primary btn-sm" onclick="reviewRequest(${request.id})">
+                        <i class="fas fa-eye"></i> 审批
+                    </button>
+                    ${request.status === 'pending' ? `
+                        <button class="btn btn-success btn-sm" onclick="quickApprove(${request.id})">
+                            <i class="fas fa-check"></i> 批准
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="quickReject(${request.id})">
+                            <i class="fas fa-times"></i> 拒绝
+                        </button>
+                    ` : ''}
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderPagination(currentPage, totalPages, totalItems) {
+    const pagination = document.getElementById('pagination');
+    
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = `
+        <button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>首页</button>
+        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>
+        <span>第 ${currentPage} 页，共 ${totalPages} 页 (${totalItems} 条记录)</span>
+        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>
+        <button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>末页</button>
+    `;
+    
+    pagination.innerHTML = paginationHTML;
+}
+
+function changePage(page) {
+    currentPage = page;
+    loadApprovalRequests();
+}
+
+function applyFilters() {
+    currentFilters = {
+        status: document.getElementById('statusFilter').value,
+        content_type: 'qa', // Manager only handles QA
+        priority: document.getElementById('priorityFilter').value,
+        per_page: document.getElementById('perPageFilter').value
+    };
+    currentPage = 1;
+    loadApprovalRequests();
+}
+
+function resetFilters() {
+    document.getElementById('statusFilter').value = 'pending';
+    document.getElementById('priorityFilter').value = '';
+    document.getElementById('perPageFilter').value = '10';
+    applyFilters();
+}
+
+function refreshData() {
+    loadStats();
+    loadApprovalRequests();
+    showSuccess('数据已刷新');
+}
+
+function reviewRequest(requestId) {
+    fetch(`/approval/api/requests/${requestId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showReviewModal(data.data);
+            } else {
+                showError('加载审批详情失败: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading request details:', error);
+            showError('加载审批详情失败');
+        });
+}
+
+function showReviewModal(data) {
+    const request = data.request;
+    const history = data.history;
+    
+    const modalBody = document.getElementById('reviewModalBody');
+    modalBody.innerHTML = `
+        <div class="form-group">
+            <label>问题</label>
+            <textarea class="form-control" id="reviewQuestion">${request.question || request.title}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>答案</label>
+            <textarea class="form-control" id="reviewAnswer">${request.answer || request.content}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>分类</label>
+            <input type="text" class="form-control" id="reviewCategory" value="${request.category || ''}">
+        </div>
+        
+        <div class="form-group">
+            <label>标签</label>
+            <input type="text" class="form-control" id="reviewTags" value="${request.tags || ''}" placeholder="用逗号分隔多个标签">
+        </div>
+        
+        <div class="form-group">
+            <label>审批意见</label>
+            <textarea class="form-control" id="reviewComment" placeholder="请输入审批意见..."></textarea>
+        </div>
+        
+        ${request.status === 'pending' ? `
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="approveRequest(${request.id})">
+                    <i class="fas fa-check"></i> 批准发布
+                </button>
+                <button class="btn btn-danger" onclick="rejectRequest(${request.id})">
+                    <i class="fas fa-times"></i> 拒绝
+                </button>
+                <button class="btn btn-warning" onclick="modifyRequest(${request.id})">
+                    <i class="fas fa-edit"></i> 修改内容
+                </button>
+            </div>
+        ` : ''}
+        
+        <div class="history-section">
+            <h4>审批历史</h4>
+            ${history.map(h => `
+                <div class="history-item">
+                    <div class="history-meta">
+                        ${h.actor_name} (${h.actor_role}) - ${formatDate(h.timestamp)}
+                    </div>
+                    <div><strong>${getActionText(h.action)}</strong></div>
+                    ${h.comment ? `<div>${h.comment}</div>` : ''}
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    document.getElementById('reviewModal').style.display = 'block';
+}
+
+function closeReviewModal() {
+    document.getElementById('reviewModal').style.display = 'none';
+}
+
+function approveRequest(requestId) {
+    const comment = document.getElementById('reviewComment').value;
+    
+    fetch(`/approval/api/requests/${requestId}/approve`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess(data.message);
+            closeReviewModal();
+            refreshData();
+        } else {
+            showError(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error approving request:', error);
+        showError('批准失败');
+    });
+}
+
+function rejectRequest(requestId) {
+    const comment = document.getElementById('reviewComment').value;
+    
+    if (!comment.trim()) {
+        showError('请输入拒绝原因');
+        return;
+    }
+    
+    fetch(`/approval/api/requests/${requestId}/reject`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess(data.message);
+            closeReviewModal();
+            refreshData();
+        } else {
+            showError(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error rejecting request:', error);
+        showError('拒绝失败');
+    });
+}
+
+function modifyRequest(requestId) {
+    const modifyData = {
+        question: document.getElementById('reviewQuestion').value,
+        answer: document.getElementById('reviewAnswer').value,
+        category: document.getElementById('reviewCategory').value,
+        tags: document.getElementById('reviewTags').value,
+        comment: document.getElementById('reviewComment').value || '内容已修改'
+    };
+    
+    fetch(`/approval/api/requests/${requestId}/modify`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(modifyData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess(data.message);
+            // Refresh the modal content
+            reviewRequest(requestId);
+        } else {
+            showError(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error modifying request:', error);
+        showError('修改失败');
+    });
+}
+
+function quickApprove(requestId) {
+    if (confirm('确定要批准这个问答吗？')) {
+        fetch(`/approval/api/requests/${requestId}/approve`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: '快速批准' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(data.message);
+                refreshData();
+            } else {
+                showError(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error approving request:', error);
+            showError('批准失败');
+        });
+    }
+}
+
+function quickReject(requestId) {
+    const reason = prompt('请输入拒绝原因：');
+    if (reason) {
+        fetch(`/approval/api/requests/${requestId}/reject`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: reason })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(data.message);
+                refreshData();
+            } else {
+                showError(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error rejecting request:', error);
+            showError('拒绝失败');
+        });
+    }
+}
+
+// Utility functions
+function getPriorityText(priority) {
+    const priorities = {
+        'urgent': '紧急',
+        'high': '高',
+        'normal': '普通',
+        'low': '低'
+    };
+    return priorities[priority] || priority;
+}
+
+function getStatusText(status) {
+    const statuses = {
+        'pending': '待审批',
+        'approved': '已批准',
+        'rejected': '已拒绝'
+    };
+    return statuses[status] || status;
+}
+
+function getActionText(action) {
+    const actions = {
+        'submitted': '提交审批',
+        'approved': '批准',
+        'rejected': '拒绝',
+        'modified': '修改内容'
+    };
+    return actions[action] || action;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleString('zh-CN');
+}
+
+function showSuccess(message) {
+    alert('✓ ' + message);
+}
+
+function showError(message) {
+    alert('✗ ' + message);
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('reviewModal');
+    if (event.target === modal) {
+        closeReviewModal();
+    }
+}
+</script>
+{% endblock %} 

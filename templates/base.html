@@ -33,19 +33,21 @@
             {% if session['role'] == 'admin' %}
             <li><a href="/admin/permissions">权限管理</a></li>
             <li><a href="/admin/user-status">用户状态</a></li>
+            <li><a href="/admin/approvals">内容审批</a></li>
             {% elif session['role'] == 'manager' %}
             <li><a href="/manager/user-status">用户状态</a></li>
             <li><a href="/manager/tasks">待审批任务</a></li>
             <li><a href="/manager/hotproblems">高频问题</a></li>
             <li><a href="/manager/update">政策更新</a></li>
+            <li><a href="/manager/approvals">问答审批</a></li>
             {% elif session['role'] == 'service' %}
             <li><a href="/service/search">搜索功能</a></li>
             <li><a href="/service/user-status">用户状态</a></li>
             {% endif %}
             <li><a href="/auth/logout">退出登录</a></li>
         </ul>
-        <div class="robot">
-            <img src="/static/images/robot.png" alt="robot-image" width="170">
+        <div class="robot" id="robotContainer">
+            <img src="/static/images/robot.png" alt="robot-image" width="170" id="robotImage">
         </div>
     </div>
     <div class="content">
@@ -133,6 +135,19 @@
         bottom: 65px;
         left: 0px;
         width: 100%;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 10;
+    }
+
+    .robot.hide-on-hover {
+        opacity: 0.2;
+        transform: translateY(10px);
+        pointer-events: none;
+    }
+
+    .robot img {
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
     /* Sidebar切换按钮样式 */
@@ -284,7 +299,69 @@
                 content.style.transform = 'translateY(0)';
             }, 200);
         }
+
+        // 机器人鼠标接近隐藏功能
+        initRobotProximityHide();
     });
+
+    // 机器人接近隐藏功能
+    function initRobotProximityHide() {
+        const robotContainer = document.getElementById('robotContainer');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (!robotContainer || !sidebar) return;
+
+        let hideTimer;
+        let showTimer;
+
+        // 监听sidebar区域的鼠标移动
+        sidebar.addEventListener('mousemove', function(e) {
+            const rect = robotContainer.getBoundingClientRect();
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            // 计算鼠标到机器人区域的距离
+            const distance = Math.sqrt(
+                Math.pow(mouseX - (rect.left + rect.width / 2), 2) + 
+                Math.pow(mouseY - (rect.top + rect.height / 2), 2)
+            );
+            
+            // 如果鼠标距离机器人区域小于150px，则隐藏机器人
+            if (distance < 150) {
+                clearTimeout(showTimer);
+                if (!robotContainer.classList.contains('hide-on-hover')) {
+                    hideTimer = setTimeout(() => {
+                        robotContainer.classList.add('hide-on-hover');
+                    }, 100);
+                }
+            } else {
+                clearTimeout(hideTimer);
+                if (robotContainer.classList.contains('hide-on-hover')) {
+                    showTimer = setTimeout(() => {
+                        robotContainer.classList.remove('hide-on-hover');
+                    }, 300);
+                }
+            }
+        });
+
+        // 当鼠标离开sidebar时，确保机器人重新显示
+        sidebar.addEventListener('mouseleave', function() {
+            clearTimeout(hideTimer);
+            showTimer = setTimeout(() => {
+                robotContainer.classList.remove('hide-on-hover');
+            }, 500);
+        });
+
+        // 点击机器人时的交互效果
+        robotContainer.addEventListener('click', function() {
+            if (!robotContainer.classList.contains('hide-on-hover')) {
+                robotContainer.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    robotContainer.style.transform = '';
+                }, 200);
+            }
+        });
+    }
 </script>
 
 </html>
